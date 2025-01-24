@@ -66,3 +66,10 @@ function get_Template_name(): mixed
     }
     return $template_name;
 }
+
+function get_Page_vars($var = null)
+{
+    if ($var === null){
+        return get_Config('page_vars');
+    }
+}
