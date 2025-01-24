@@ -20,12 +20,13 @@
     <div class="search-box">
         <form action="/id" method="get">
             <input type="text" name="keyword" class="search-input" placeholder="请输入8位备案号 OR 域名" required><br>
-            <p style="text-align: center;">{{ site_description }}</p>
+            <p style="text-align: center;">{{ global.site_description }}</p>
         </form>
     </div>
 </div>
 <div class="footer">
-    {{ footer_code|raw }}
+    <div>{{ global.menu }}</div>
+    {{ global.footer_code|raw }}
 </div>
 </body>
 </html>

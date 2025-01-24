@@ -68,14 +68,7 @@ function get_Page_vars($additionalVars = [])
             'admin_nickname' => get_Config('admin_nickname', '云团子', true),
             'admin_email' => get_Config('admin_email', 'yun@yuncheng.fun', true),
             'admin_qq' => get_Config('admin_qq', '937319686', true),
-            'footer_code' => get_Config('footer_code', '<a href=\"index.php\">主页</a> \r\n<a href=\"about.php\">关于</a>\r\n<a href=\"joinus.php\">加入</a>
-       \r\n<a href=\"change.php\">变更</a>\r\n<a href=\"gs.php\">公示</a>\r\n<a href=\"qy.php\">迁跃</a>\r\n<br>\r\n
-       <img src=\"https://page.yuncheng.fun/png/cn.png\" alt=\"国旗\" class=\"cn-logo\">
-       <a href=\"https://beian.miit.gov.cn/\" target=\"_blank\">冀ICP备2024092417号-1</a>
-       \r\n<img src=\"https://page.yuncheng.fun/png/beian.png\" alt=\"备案图标\" class=\"beian-logo\">
-       <a target=\"_blank\" href=\"http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=13010802002339\">
-       冀公网安备13010802002339号</a>\r\n<a href=\"https://icp.yuncheng.fun/id.php?keyword=20243999\" target=\"_blank\">
-       团ICP备20243999号</a>', true),
+            'footer_code' => get_Config('footer_code', '', true),
             'template_name' => get_Template_name(),
             'audit_duration' => get_Config('audit_duration', '3天', true),
             'feedback_link' => get_Config('feedback_link' , 'https://qm.qq.com/q/kClRRuBmOQ' , true),
