@@ -5,6 +5,4 @@ if (!defined('APP_ROOT')) {
 }
 $twig = initTwig();
 // 渲染404模板
-echo $twig->render('home.html.twig', [
-// 这里可以传递变量给模板
-]);
+echo $twig->render('home.html.twig', get_Page_vars());

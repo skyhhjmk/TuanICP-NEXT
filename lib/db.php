@@ -16,7 +16,6 @@ function initDatabase()
 
     $dotenv->required('DB_TYPE')->notEmpty();
     $DB_TYPE = $_ENV['DB_TYPE'];
-    define('DB_TYPE', $DB_TYPE);
 
     switch ($DB_TYPE) {
         case 'mysql':
