@@ -7,8 +7,6 @@ include APP_ROOT . '/lib/twig_config.php';
 $uri = $_SERVER['REQUEST_URI'];
 $uri = strtok($uri, '?');
 $uri = trim($uri, '/');
-// 解析路由参数
-$parts = explode('/', $uri);
 // 定义路由映射
 $routes = [
     '' => 'home.php',
@@ -91,18 +89,20 @@ function handleRoute($parts, $routes)
 }
 
 
-// 调试信息
-//echo "APP_ROOT: " . APP_ROOT . "<br>";
-//echo "URI: " . $uri . "<br>";
-//echo "Parts: ";
-//print_r($parts);
-//echo "<br>";
-$page = handleRoute($parts, $routes);
-//echo "Page: " . $page . "<br>";
-$file = APP_ROOT . '/pages/' . $page;
-//echo "File: " . $file . "<br>";
+// 检查查询字符串中是否有 'router' 参数
+if (isset($_GET['router'])) {
+    // 使用查询字符串中的 'router' 参数
+    $parts = explode('/', $_GET['router']);
+} else {
+    // 使用路径路由
+    $parts = explode('/', $uri);
+}
 
-// 检查文件是否存在
+// 调用路由处理函数
+$page = handleRoute($parts, $routes);
+
+// 检查文件是否存在并包含
+$file = APP_ROOT . '/pages/' . $page;
 if (file_exists($file)) {
     include $file;
 } else {
@@ -110,4 +110,3 @@ if (file_exists($file)) {
     include APP_ROOT . '/pages/404.php';
     exit;
 }
-

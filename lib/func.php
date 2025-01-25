@@ -85,14 +85,64 @@ function get_Template_name(): mixed
     return $template_name;
 }
 
-function get_Menu($style = 'bottom')
+/**
+ * @param string $style
+ * @return mixed
+ * @throws JsonException
+ */
+function get_Menu(string $style = 'bottom'): mixed
 {
     $init = '';
-    $menu = get_Config('menu', '', true);
-    $data = unserialize($menu);
+    $serInit = serialize($init);
+    $menu = get_Config('menu', $serInit, true);
+    return unserialize($menu);
 }
 
-function get_Page_vars($additionalVars = [])
+function getFullURL()
+{
+    $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    $uri = $_SERVER['REQUEST_URI'];
+
+    return $scheme . '://' . $host . $uri;
+}
+
+
+function getDomainURL()
+{
+    $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+
+    return $scheme . '://' . $host;
+}
+
+function get_Url($page , $params = null)
+{
+    $dotenv = Dotenv\Dotenv::createImmutable(APP_ROOT);
+    $dotenv->load();
+    $dotenv->required('REWRITE');
+    $Rewrite = $_ENV['REWRITE'] ?? false;
+    if ($Rewrite === true) {
+        if ($params !== null) {
+            return '/' . $page . '?' . http_build_query($params);
+        }else{
+            return '/' . $page;
+        }
+    } else {
+        if ($params !== null) {
+            return '/index.php?router=' . $page . '&' . http_build_query($params);
+        } else {
+            return '/index.php?router=' . $page;
+        }
+    }
+}
+
+/**
+ * @param array $additionalVars
+ * @return array|null
+ * @throws JsonException
+ */
+function get_Page_vars(array $additionalVars = []): ?array
 {
     $page_vars = [
         'global' => [
@@ -109,9 +159,14 @@ function get_Page_vars($additionalVars = [])
             'audit_duration' => get_Config('audit_duration', '3天', true),
             'feedback_link' => get_Config('feedback_link', 'https://qm.qq.com/q/kClRRuBmOQ', true),
             'background_image' => get_Config('background_image', 'https://cdn.koxiuqiu.cn/ccss/ecyrw/ecy%20(68).png', true),
+            'menu' => get_Menu(),
         ],
         'template' => [
             'root' => '/data/templates/' . get_Template_name(),
+        ],
+        'url' => [
+            'index' => '/',
+            'id' => get_Url('id'),
         ]
     ];
 // 合并额外的内容到$page_vars数组中
