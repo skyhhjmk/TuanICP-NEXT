@@ -3,10 +3,6 @@
 function initTwig(): \Twig\Environment
 {
     define('TEMPLATE_NAME', get_Template_name());
-    $dotenv = Dotenv\Dotenv::createImmutable(APP_ROOT);
-    $dotenv->load();
-    $dotenv->required('DEBUG');
-    DEBUG = $_ENV['DEBUG'] ?? false;
     $loader = new \Twig\Loader\FilesystemLoader(TUANICP_TEMPLATE_DIR . '/' . TEMPLATE_NAME); // 设置模板位置
     $loader->addPath(TUANICP_TEMPLATE_DIR . '/' . TEMPLATE_NAME, 'index');
     $loader->addPath(TUANICP_TEMPLATE_DIR . '/' . TEMPLATE_NAME, 'admin');
