@@ -12,7 +12,7 @@ $parts = explode('/', $uri);
 // 定义路由映射
 $routes = [
     '' => 'home.php',
-    'about' => 'about.php',
+    'id' => 'id.php',
     'contact' => 'contact.php',
     'plan' => 'plan.php',
     'this' => 'this.php',

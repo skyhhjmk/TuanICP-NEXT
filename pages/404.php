@@ -4,4 +4,4 @@ if (!defined('APP_ROOT')) {
 }
 $twig = initTwig();
 // 渲染404模板
-echo $twig->render('404.html.twig', get_Page_vars());
+echo $twig->render('@index/404.html.twig', get_Page_vars());

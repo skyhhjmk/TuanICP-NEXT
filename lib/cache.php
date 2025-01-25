@@ -14,7 +14,7 @@ use Stash\Pool;
 /**
  * @return Pool|null
  */
-function initCache()
+function initCache(): ?Pool
 {
     $dotenv = Dotenv\Dotenv::createImmutable(APP_ROOT);
     $dotenv->load();
