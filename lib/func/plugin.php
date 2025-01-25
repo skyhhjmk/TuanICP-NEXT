@@ -50,7 +50,9 @@ function do_action($hook, ...$args)
     // 如果只有一个返回值，直接返回该值；否则返回所有返回值的数组
     return count($results) === 1 ? array_shift($results) : $results;
 }
-function get_plugin_info($plugin_file) {
+
+function get_plugin_info($plugin_file)
+{
     // 确保文件存在
     if (!file_exists($plugin_file)) {
         return false;
@@ -101,7 +103,8 @@ function get_plugin_info($plugin_file) {
 }
 
 
-function is_plugin_active($plugin_file): bool {
+function is_plugin_active($plugin_file): bool
+{
     // 获取当前所有启用的插件
     $activePlugins = get_active_plugins();
 
@@ -117,26 +120,29 @@ function is_plugin_active($plugin_file): bool {
     return false;
 }
 
-function get_active_plugins(): array {
-    // 初始化缓存池
+function get_active_plugins(): array
+{
+    // 初始化缓存池，如果缓存被禁用，则 $cachePool 为 null
     $cachePool = initCache();
 
     // 定义缓存项的键
     $cacheKey = 'active_plugins';
 
-    // 尝试从缓存中获取数据
-    $item =$cachePool->getItem($cacheKey);
-    if ($item->isHit()) {
-        // 如果缓存命中，直接返回缓存的数据
-        return $item->get();
+    // 如果缓存池不为 null，尝试从缓存中获取数据
+    if ($cachePool !== null) {
+        $item = $cachePool->getItem($cacheKey);
+        if ($item->isHit()) {
+            // 如果缓存命中，直接返回缓存的数据
+            return $item->get();
+        }
     }
 
     // 初始化数据库连接
     $pdo = initDatabase();
     $sql = "SELECT `v` FROM config WHERE `k` = 'active_plugins'";
-    $stmt =$pdo->prepare($sql);
+    $stmt = $pdo->prepare($sql);
     $stmt->execute();
-    $result =$stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$result || empty($result['v'])) {
         // 如果查询结果为空或值为空，返回空数组
@@ -151,16 +157,18 @@ function get_active_plugins(): array {
         return array();
     }
 
-    // 将结果保存到缓存中，并设置缓存过期时间（例如 3600 秒）
-    $item->set($activePlugins);
-    $cachePool->save($item);
+    // 如果缓存池不为 null，将结果保存到缓存中，并设置缓存过期时间（例如 3600 秒）
+    if ($cachePool !== null) {
+        $item->set($activePlugins);
+        $cachePool->save($item);
+    }
 
     return $activePlugins;
 }
 
 
-
-function activate_plugin($plugin_name, $plugin_file) {
+function activate_plugin($plugin_name, $plugin_file)
+{
     $pdo = initDatabase();
     // 获取当前所有启用的插件
     $activePlugins = get_active_plugins();
@@ -193,7 +201,8 @@ function activate_plugin($plugin_name, $plugin_file) {
     return true;
 }
 
-function deactivate_plugin($plugin_name, $plugin_file) {
+function deactivate_plugin($plugin_name, $plugin_file)
+{
     $pdo = initDatabase();
     // 获取当前所有启用的插件
     $activePlugins = get_active_plugins();
@@ -234,7 +243,8 @@ function deactivate_plugin($plugin_name, $plugin_file) {
     return true;
 }
 
-function get_all_plugins(): array {
+function get_all_plugins(): array
+{
 
     // 初始化一个空数组来存储插件信息
     $all_plugins = [];
@@ -270,7 +280,7 @@ function get_all_plugins(): array {
                         $all_plugins[] = $plugin;
 //                        echo "Added plugin: " . $plugin_info['Plugin Name'] . PHP_EOL;
                     } else {
-                        output_error("无法获取插件信息: " , $plugin_info_file . PHP_EOL);
+                        output_error("无法获取插件信息: ", $plugin_info_file . PHP_EOL);
                     }
                 }
             }
@@ -278,13 +288,14 @@ function get_all_plugins(): array {
         // 关闭目录
         closedir($dir);
     } else {
-        output_error( "插件目录不存在: " , WT_PLUGIN_DIR . PHP_EOL);
+        output_error("插件目录不存在: ", WT_PLUGIN_DIR . PHP_EOL);
     }
 
     return $all_plugins;
 }
 
-function load_plugins(): void {
+function load_plugins(): void
+{
     $active_plugins = get_active_plugins();
 
     foreach ($active_plugins as $plugin) {
@@ -301,7 +312,7 @@ function load_plugins(): void {
 //                writeLog("Error","Error loading plugin {$plugin->name}: " . $e->getMessage());
 //                writeLogFile("Error","Error loading plugin {$plugin->name}: " . $e->getMessage());
                 // 可以在这里记录错误日志，或者进行其他错误处理
-                output_error("Error loading plugin {$plugin->name}: " , $e->getMessage() . PHP_EOL);
+                output_error("Error loading plugin {$plugin->name}: ", $e->getMessage() . PHP_EOL);
             }
         }
     }

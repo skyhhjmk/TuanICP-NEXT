@@ -12,12 +12,19 @@ use Stash\Driver\Redis;
 use Stash\Pool;
 
 /**
- * @return Pool
+ * @return Pool|null
  */
 function initCache()
 {
     $dotenv = Dotenv\Dotenv::createImmutable(APP_ROOT);
     $dotenv->load();
+
+    // 检查是否启用了缓存
+    $CACHE_ENABLED = $_ENV['CACHE_ENABLED'] ?? true;
+    if (!$CACHE_ENABLED) {
+        // 如果缓存被禁用，则返回 null 或一个不执行任何操作的缓存池
+        return null; // 或者 return new Ephemeral(); 如果你想返回一个不执行任何操作的缓存池
+    }
 
     $dotenv->required('CACHE_TYPE')->notEmpty();
     $CACHE_TYPE = $_ENV['CACHE_TYPE'];
@@ -45,15 +52,14 @@ function initCache()
             $dotenv->required(['REDIS_SERVER', 'REDIS_PORT']);
             $server = $_ENV['REDIS_SERVER'];
             $port = $_ENV['REDIS_PORT'];
-            $password = $_ENV['REDIS_PASSWORD'] ?? ''; // 获取环境变量中的密码，如果没有设置则为空字符串
+            $password = $_ENV['REDIS_PASSWORD'] ?? '';
             $redisOptions = array(
                 'servers' => array(array(
                     'server' => $server,
                     'port' => $port,
-                    'password' => $password // 添加密码选项
+                    'password' => $password
                 ))
             );
-            // 如果密码不为空，则设置密码
             if (!empty($password)) {
                 $redisOptions['servers'][0]['password'] = $password;
             }
@@ -67,7 +73,8 @@ function initCache()
     }
 
     if ($driver !== null) {
-        $pool = new Pool($driver);
+        // 设置全局过期时间，例如 3600 秒（1 小时）
+        $pool = new Pool($driver, ['ttl' => 3600]);
         return $pool;
     } else {
         output_error('缓存驱动初始化失败。');
@@ -76,3 +83,4 @@ function initCache()
     return null;
 }
 
+?>

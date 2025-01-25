@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="{{ global.site_avatar }}" type="image/png">
+    <meta name="keywords"
+          content="{{ user.website_name }}, {{ global.site_abbr }}ICP备{{ user.icp_number }}号, {{ global.site_abbr }}备, {{ global.site_abbr }}ICP备, {{ site_name }}">
+    <meta name="description" content="{{ user.website_info }}">
+    <title>{{ global.site_abbr }}ICP备{{ user.icp_number }}
+        号—{{ user.website_name }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ template.root }}/css/id.css">
+    <link rel="stylesheet" type="text/css" href="{{ template.root }}/css/footer.css">
+    <style>
+        a.fk {
+            text-decoration: none; /* 取消下划线 */
+            color: red; /* 文字颜色为红色 */
+            font-weight: bold; /* 文字加粗 */
+        }
+
+    </style>
+
+
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>{{ global.site_abbr }}ICP备案查询</h1>
+    </div>
+    <div class="table-container">
+        <div class="row">
+            <div class="cell header-cell">网站名称</div>
+            <div class="cell">{{ user.website_name }}</div>
+        </div>
+        <div class="row">
+            <div class="cell header-cell">网站域名</div>
+            <div class="cell">
+                <a style="color:#b62df0; text-decoration:none; text-shadow: 1px 1px 1px black;"
+                   href="//{{ user.website_url }}" target="_blank">
+                    {{ user.website_url }}
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell header-cell">网站信息</div>
+            <div class="cell">{{ user.website_info }}</div>
+        </div>
+        <div class="row">
+            <div class="cell header-cell">{{ global.site_abbr }}备案号</div>
+            <div class="cell">{{ global.site_abbr }}
+                ICP备{{ user.icp_number }}号
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell header-cell">所有者</div>
+            <div class="cell">{{ user.owner }}</div>
+        </div>
+        <div class="row">
+            <div class="cell header-cell">更新时间</div>
+            <div class="cell">{{ user.update_time }}</div>
+        </div>
+        <div class="row">
+            <div class="cell header-cell">状态</div>
+            <div class="cell">{{ user.status }}<a
+                        href="{{ global.feedback_link }}" class="fk">&nbsp;&nbsp;反馈</a></div>
+        </div>
+    </div>
+    <br>
+</div>
+<div class="footer">
+    <div>{{ global.menu }}</div>
+    {{ global.footer_code|raw }}
+</div>
+</body>
+</html>

@@ -7,7 +7,7 @@ function initTwig(): \Twig\Environment
     $dotenv->load();
     $dotenv->required('DEBUG');
     $DEBUG = $_ENV['DEBUG'] ?? false;
-    $loader = new \Twig\Loader\FilesystemLoader(APP_ROOT . '/templates/' . TEMPLATE_NAME, '.html.twig'); // 设置模板位置
+    $loader = new \Twig\Loader\FilesystemLoader(TUANICP_TEMPLATE_DIR . '/' . TEMPLATE_NAME, '.html.twig'); // 设置模板位置
     $twig = new \Twig\Environment($loader, [
         'cache' => APP_ROOT . '/cache', // 设置缓存目录
         'debug' => $DEBUG, // 开启调试模式

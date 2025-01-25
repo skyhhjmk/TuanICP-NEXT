@@ -13,6 +13,9 @@ CREATE TABLE users
     created_at DATETIME                               DEFAULT NOW()
 ) ENGINE = InnoDB;
 
+INSERT INTO users (user_id, username, email, password, role,status)
+VALUES (0, 'guest', 'guest', 'guest','guest','inactive');
+
 CREATE TABLE user_meta
 (
     meta_id    INT AUTO_INCREMENT PRIMARY KEY,
@@ -29,7 +32,7 @@ CREATE TABLE sites
     user_id         INT          NOT NULL,
     site_name       VARCHAR(255) NOT NULL,
     site_url        VARCHAR(255) NOT NULL,
-    site_desc       TEXT                                       ,
+    site_desc       TEXT,
     site_avatar_url VARCHAR(255),
     site_config     TEXT,
     site_status     ENUM ('public', 'private')                 DEFAULT 'public',
@@ -66,4 +69,3 @@ CREATE TABLE config
     v TEXT
 ) ENGINE = InnoDB;
 
-INSERT INTO config (k, v) VALUES ('template_name', 'tuan')

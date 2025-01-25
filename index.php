@@ -2,6 +2,7 @@
 define('APP_ROOT', __DIR__);
 // 定义插件目录常量
 define('TUANICP_PLUGIN_DIR', APP_ROOT . '/data/plugins');
+define('TUANICP_TEMPLATE_DIR', APP_ROOT . '/data/templates');
 require APP_ROOT . '/lib/globalExceptionHandler.php'; // 全局异常处理，需要在所有文件之前引入
 include APP_ROOT . '/vendor/autoload.php'; // 加载第三方库
 include APP_ROOT . '/lib/db.php'; // 数据库连接
