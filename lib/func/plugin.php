@@ -15,41 +15,7 @@ if (!defined('APP_ROOT')) {
     exit('Direct access is not allowed.');
 }
 
-// 存储钩子回调的数组
-$plugin_callbacks = [];
-
-// 注册钩子回调
-function add_action($hook, $callback)
-{
-    global $plugin_callbacks;
-    if (!isset($plugin_callbacks[$hook])) {
-        $plugin_callbacks[$hook] = [];
-    }
-    $plugin_callbacks[$hook][] = $callback;
-}
-
-// 触发钩子回调，并收集返回值
-function do_action($hook, ...$args)
-{
-    global $plugin_callbacks;
-    $results = []; // 用于存储每个回调的返回值
-    if (!empty($plugin_callbacks[$hook])) {
-        foreach ($plugin_callbacks[$hook] as $callback) {
-            $result = call_user_func_array($callback, $args);
-            if ($result !== null) { // 只收集非null的返回值
-                $results[] = $result;
-            }
-        }
-    }
-
-    // 如果没有收集到任何返回值，返回null或适当的默认值
-    if (empty($results)) {
-        return null; // 或者可以返回一个默认值，例如 false 或 ''
-    }
-
-    // 如果只有一个返回值，直接返回该值；否则返回所有返回值的数组
-    return count($results) === 1 ? array_shift($results) : $results;
-}
+include APP_ROOT . '/lib/action.php';
 
 function get_plugin_info($plugin_file)
 {
@@ -250,17 +216,17 @@ function get_all_plugins(): array
     $all_plugins = [];
 
     // 检查目录是否存在
-    if (is_dir(WT_PLUGIN_DIR)) {
+    if (is_dir(TUANICP_PLUGIN_DIR)) {
         // 打开目录
-        $dir = opendir(WT_PLUGIN_DIR);
+        $dir = opendir(TUANICP_PLUGIN_DIR);
         // 循环读取目录下的所有条目
         while (($subdir = readdir($dir)) !== false) {
             // 跳过'.'和'..'这两个特殊的目录
             if ($subdir != "." && $subdir != "..") {
                 // 检查是否为目录
-                if (is_dir(WT_PLUGIN_DIR . '/' . $subdir)) {
+                if (is_dir(TUANICP_PLUGIN_DIR . '/' . $subdir)) {
                     // 构建插件信息文件路径
-                    $plugin_info_file = WT_PLUGIN_DIR . '/' . $subdir . '/main.php';
+                    $plugin_info_file = TUANICP_PLUGIN_DIR . '/' . $subdir . '/main.php';
 //                    echo "Processing plugin info file: " . $plugin_info_file . PHP_EOL;
 
                     // 获取插件信息
@@ -288,7 +254,7 @@ function get_all_plugins(): array
         // 关闭目录
         closedir($dir);
     } else {
-        output_error("插件目录不存在: ", WT_PLUGIN_DIR . PHP_EOL);
+        output_error("插件目录不存在: ", TUANICP_PLUGIN_DIR . PHP_EOL);
     }
 
     return $all_plugins;

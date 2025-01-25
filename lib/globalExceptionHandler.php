@@ -1,26 +1,16 @@
 <?php
-function globalExceptionHandler($exception) {
+function globalExceptionHandler($exception)
+{
     // 获取异常的详细信息
-    $message =$exception->getMessage();
-    $code =$exception->getCode();
-    $file =$exception->getFile();
-    $line =$exception->getLine();
-    $trace =$exception->getTraceAsString();
+    $message = $exception->getMessage();
+    $code = $exception->getCode();
+    $file = $exception->getFile();
+    $line = $exception->getLine();
+    $trace = $exception->getTraceAsString();
 
     // 记录错误信息到日志
     error_log("Uncaught Exception: '{$message}' in {$file} on line {$line}");
     error_log("Exception Trace: {$trace}");
-
-    try {
-        $dotenv = Dotenv\Dotenv::createImmutable(APP_ROOT);
-        $dotenv->load();
-
-        $dotenv->required('DEBUG')->notEmpty();
-        $DEBUG =$_ENV['DEBUG'];
-    } catch (Exception $e) {
-        // 如果加载.env文件失败，则使用默认的配置
-        $DEBUG = 'false';
-    }
 
     $solutions = [
         'file not found' => '请检查文件路径是否正确。',
@@ -49,28 +39,103 @@ function globalExceptionHandler($exception) {
 
     // 根据错误消息提供可能的解决方案
     $solution = "未知错误，请汇报显示的错误信息。";
-    foreach ($solutions as$keyword => $advice) {
-        if (strpos(strtolower($message),$keyword) !== false) {
-            $solution =$advice;
+    foreach ($solutions as $keyword => $advice) {
+        if (strpos(strtolower($message), $keyword) !== false) {
+            $solution = $advice;
             break;
         }
     }
 
-    // 根据DEBUG配置显示错误信息
-    if ($DEBUG === 'false') {
-        echo "发生了一个特殊的错误，请向站点管理员汇报，谢谢。";
-    } elseif ($DEBUG === 'true') {
-        echo "<b style='color: red'>";
-        echo "发生了一个特殊的错误，请向站点管理员汇报，谢谢。请根据下方可能的原因先行排查是否是您的配置错误。<br>";
-        echo "<span style='color: blue'>可能的原因: {$solution}</span><br>";
-        echo "<span style='color: blue'>如果您是开发者正在修改代码，请检查您的代码是否正确。特别注意在 {$file} 的第 {$line} 行。</span><br>";
-        echo "未捕获的异常[code:{$code}]: '{$message}' 在 {$file} 的第 {$line} 行。<br>";
-        echo "堆栈跟踪: {$trace}";
-        echo "</b>";
-    } else {
-        echo "发生了一个特殊的错误，请向站点管理员汇报，谢谢。此外，站点的配置有误！";
-    }
+    // 开始输出HTML
+    ?>
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>错误提示</title>
+        <style>
+            body {
+                font-family: 'Arial', sans-serif;
+                background-color: #f2f2f2;
+                color: #333;
+                text-align: center;
+                padding-top: 100px;
+            }
+
+            .container {
+                background-color: #fff;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                overflow: hidden; /* 防止内容溢出容器 */
+            }
+
+            .error-title {
+                font-size: 24px;
+                color: #d9534f;
+                margin-bottom: 20px;
+            }
+
+            .error-message {
+                font-size: 18px;
+                margin-bottom: 20px;
+                word-wrap: break-word; /* 允许长单词换行 */
+            }
+
+            .solution {
+                font-size: 16px;
+                color: #5bc0de;
+                margin-bottom: 20px;
+            }
+
+            .debug-info {
+                max-height: 200px; /* 设置最大高度 */
+                overflow-y: auto; /* 添加垂直滚动条 */
+                margin-bottom: 20px;
+                background-color: #f9f9f9;
+                border: 1px solid #ddd;
+                padding: 10px;
+                word-wrap: break-word; /* 允许长单词换行 */
+            }
+
+            .back-home-button {
+                display: inline-block;
+                padding: 10px 20px;
+                margin-top: 20px;
+                background-color: #007bff;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+            }
+
+            .back-home-button:hover {
+                background-color: #0056b3;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="container">
+        <div class="error-title">哎呀，出错了！</div>
+        <div class="error-message">我们遇到了一些问题，请稍后再试。</div>
+        <?php if (DEBUG === true): ?>
+            <div class="solution">可能的原因: <?php echo $solution; ?></div>
+            <div class="debug-info" style="display: block;">
+            <pre>未捕获的异常[code:<?php echo $code; ?>]: '<?php echo $message; ?>' <?php echo PHP_EOL; ?>在 <?php echo $file; ?> 的第 <?php echo $line; ?> 行。
+堆栈跟踪: <?php echo $trace; ?></pre>
+            </div>
+        <?php endif; ?>
+        <a href="/" class="back-home-button">返回首页</a>
+    </div>
+    </body>
+    </html>
+    <?php
+    // 结束输出HTML
 }
 
 // 设置全局异常处理函数
 set_exception_handler('globalExceptionHandler');
+?>

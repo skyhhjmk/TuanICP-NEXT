@@ -8,11 +8,7 @@ function miss_env($env_name, $tip = '请检查 .env 文件')
 
 function output_error($error_msg = '发生了一个未知的错误！', $error_detail = null, $error_code = '500')
 {
-    $dotenv = Dotenv\Dotenv::createImmutable(APP_ROOT);
-    $dotenv->safeLoad();
-    $dotenv->required('DEBUG');
-    $debug_status = $_ENV['DEBUG'] ?? false;
-    if ($debug_status === 'true') {
+    if (defined('DEBUG') && DEBUG) {
         echo '错误代码：' . $error_code . '<br>';
         echo '错误信息：' . $error_msg . '<br>';
         if ($error_detail) {

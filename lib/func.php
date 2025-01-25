@@ -171,10 +171,14 @@ function get_Page_vars(array $additionalVars = []): ?array
     ];
 // 合并额外的内容到$page_vars数组中
     $page_vars = array_merge($page_vars, $additionalVars);
-// 触发钩子，并获取返回值
-    $pluginAddPageVars = do_action('add_page_vars');
-    if (!empty($pluginAddPageVars)) {
-        // 如果插件返回了值，则合并到$page_vars数组中
+// 定义一个默认的返回值
+    $default_page_vars = array();
+
+// 使用 apply_filters 触发钩子，并获取返回值
+    $pluginAddPageVars = apply_filters('add_page_vars',$default_page_vars);
+
+// 如果插件返回了值，则合并到 $page_vars 数组中
+    if (!empty($pluginAddPageVars) && is_array($pluginAddPageVars)) {
         $page_vars = array_merge($page_vars, $pluginAddPageVars);
     }
     return $page_vars;

@@ -44,10 +44,13 @@ $routes = [
         'settings' => 'admin/settings.php'
     ],
 ];
-$pluginAddVars = do_action('page_router');
+// 应用过滤器，并获取修改后的路由数组
+$pluginAddVars = apply_filters('page_router',$routes);
+
+// 如果插件返回了值，则合并到$routes数组中
+// 注意：apply_filters已经返回了合并后的数组，所以这里不需要再次合并
 if (!empty($pluginAddVars)) {
-    // 如果插件返回了值，则合并到$pageVars数组中
-    $routes = array_merge($routes, $pluginAddVars);
+    $routes = $pluginAddVars;
 }
 // 路由处理函数
 function handleRoute($parts, $routes)
