@@ -1,11 +1,11 @@
 <?php
 // custom_email_sender.php
 
-require_once 'send_mail.php';
+use PHPMailer\PHPMailer\PHPMailer;
+require_once 'vendor/autoload.php';
 
 function ces_phpmailer_send($args) {
     // 引入 PHPMailer 类
-    require_once 'path/to/PHPMailerAutoload.php';
 
     $mail = new PHPMailer;
 

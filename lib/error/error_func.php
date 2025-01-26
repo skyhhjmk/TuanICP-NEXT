@@ -8,14 +8,6 @@ function miss_env($env_name, $tip = '请检查 .env 文件')
 
 function output_error($error_msg = '发生了一个未知的错误！', $error_detail = null, $error_code = '500')
 {
-    if (defined('DEBUG') && DEBUG) {
-        echo '错误代码：' . $error_code . '<br>';
-        echo '错误信息：' . $error_msg . '<br>';
-        if ($error_detail) {
-            echo '错误详情：' . $error_detail . '<br>';
-        }
-    } else {
-        echo $error_msg . '<br>' . '若要查看错误信息，请将 DEBUG 设置为 true（即开启调试模式）' . '<br>';
-    }
+
 
 }

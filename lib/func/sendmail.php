@@ -19,3 +19,4 @@ function default_sendmail($override, $to, $subject, $message)
 
 // 注册默认的邮件发送方式
 add_filter('sendmail', 'default_sendmail', 10, 4);
+//var_dump($GLOBALS['tuanicp_filters'], $GLOBALS['tuanicp_actions']);
