@@ -4,7 +4,6 @@
     "tedivm/stash": "^1.1",
     "twig/twig": "^3.14",
     "ext-pdo": "*",
-    "ext-curl": "*",
-    "phpmailer/phpmailer": "^6.9"
+    "ext-curl": "*"
   }
 }
