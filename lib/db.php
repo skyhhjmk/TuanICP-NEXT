@@ -13,22 +13,22 @@ function initDatabase()
 {
     $dotenv = Dotenv\Dotenv::createImmutable(APP_ROOT);
     $dotenv->load();
+//
+//    $dotenv->required('DB_TYPE')->notEmpty();
+//    $DB_TYPE = $_ENV['DB_TYPE'];
 
-    $dotenv->required('DB_TYPE')->notEmpty();
-    $DB_TYPE = $_ENV['DB_TYPE'];
-
-    switch ($DB_TYPE) {
-        case 'mysql':
+//    switch ($DB_TYPE) {
+//        case 'mysql':
             $dotenv->required(['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS']);
             $dsn = "mysql:host={$_ENV['DB_HOST']};dbname={$_ENV['DB_NAME']};charset=utf8mb4";
             $user = $_ENV['DB_USER'];
             $pass = $_ENV['DB_PASS'];
-            break;
-        default:
-            output_error('不支持的数据库类型: ' . $DB_TYPE);
-    }
+//            break;
+//        default:
+//            output_error('不支持的数据库类型: ' . $DB_TYPE);
+//    }
 
-    if ($DB_TYPE == 'mysql') {
+//    if ($DB_TYPE == 'mysql') {
         $options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -40,8 +40,8 @@ function initDatabase()
         } catch (PDOException $e) {
             output_error("数据库连接失败: ", $e->getMessage());
         }
-    } else {
-        output_error('不支持的数据库类型: ' . $DB_TYPE);
-    }
+//    } else {
+//        output_error('不支持的数据库类型: ' . $DB_TYPE);
+//    }
     return null;
 }
