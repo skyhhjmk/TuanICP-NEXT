@@ -1,6 +1,14 @@
 <?php
+
 function globalExceptionHandler($exception)
 {
+
+// 初始化缓存池
+    $cachePool = initCache();
+
+// 清空整个缓存池
+    $cachePool->clear();
+
     // 获取异常的详细信息
     $message = $exception->getMessage();
     $code = $exception->getCode();
@@ -14,6 +22,13 @@ function globalExceptionHandler($exception)
 
     $solutions = [
         'file not found' => '请检查文件路径是否正确。',
+        'database error' => '请检查数据库连接设置。',
+        'file not writable' => '文件不可写，请检查文件权限。',
+        'undefined variable' => '某个变量为空，检查输入参数。',
+        'undefined function' => '尝试调用了一个不存在的函数，请检查函数名称。',
+        'must be of type array, string given' => '需要提供一个数组，但是提供了字符串。',
+        'undefined property' => '尝试访问一个不存在的属性，请检查属性名称。',
+        'Unable to find template' => '请检查模板主题是否正确。',
         'database connection' => '请检查数据库连接设置。',
         'permission denied' => '请检查文件或目录权限。',
         'environment variables' => '请检查环境变量设置。',

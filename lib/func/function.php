@@ -72,6 +72,7 @@ function set_Config($key, $value): bool
 }
 
 /**
+ * 获取启用的主题名称
  * @return mixed
  * @throws JsonException
  */
@@ -86,17 +87,69 @@ function get_Template_name(): mixed
 }
 
 /**
- * @param string $style
- * @return mixed
+ * 转义HTML内容中的字符串
+ * 通常用于直接插入HTML标签之间的文本
+ * @param string $text 要转义的字符串
+ * @return string 转义后的字符串
+ */
+function esc_html($text) {
+    return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * 转义HTML属性值中的字符串
+ * 通常用于HTML标签的属性值
+ * @param string $text 要转义的字符串
+ * @return string 转义后的字符串
+ */
+function esc_attr($text) {
+    return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * 获取菜单
+ * @param string $style 样式
+ * @return string HTML菜单
  * @throws JsonException
  */
-function get_Menu(string $style = 'bottom'): mixed
+function get_Menu(string $style = 'bottom'): string
 {
-    $init = '';
+    $init = [
+        '首页' => [
+            'title' => '首页',
+            'url' => get_Url('index'),
+        ],
+    ];
     $serInit = serialize($init);
-    $menu = get_Config('menu', $serInit, true);
-    return unserialize($menu);
+    $menu = get_Config('menu',$serInit, true);
+    $unserializedMenu = unserialize($menu);
+
+    // 允许插件通过过滤器修改菜单样式
+    $filteredMenu = apply_filters('get_menu_style',$unserializedMenu, $style);
+
+    // 将菜单转换为HTML字符串
+    $htmlMenu = convertMenuToHtml($filteredMenu, $style);
+
+    return $htmlMenu;
 }
+
+/**
+ * 将菜单数据转换为HTML字符串
+ * @param array $menu 菜单数据
+ * @param string $style 菜单样式
+ * @return string HTML菜单
+ */
+function convertMenuToHtml(array $menu, string$style): string
+{
+    // 根据样式和菜单数据生成HTML
+    $html = '<ul class="' . esc_attr($style) . '-menu">';
+    foreach ($menu as$menuItem) {
+        $html .= '<li>' . esc_html($menuItem['title']) . '</li>';
+    }
+    $html .= '</ul>';
+    return $html;
+}
+
 
 function getFullURL()
 {
