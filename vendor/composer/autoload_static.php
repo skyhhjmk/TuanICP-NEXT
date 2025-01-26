@@ -19,11 +19,6 @@ class ComposerStaticInite875ae8441d070d7dda5f4b47a2117aa
     );
 
     public static $prefixLengthsPsr4 = array (
-        'e' => 
-        array (
-            'eftec\\CliOne\\' => 13,
-            'eftec\\' => 6,
-        ),
         'T' => 
         array (
             'Twig\\' => 5,
@@ -40,6 +35,7 @@ class ComposerStaticInite875ae8441d070d7dda5f4b47a2117aa
         array (
             'Psr\\Cache\\' => 10,
             'PhpOption\\' => 10,
+            'PHPMailer\\PHPMailer\\' => 20,
         ),
         'G' => 
         array (
@@ -52,15 +48,6 @@ class ComposerStaticInite875ae8441d070d7dda5f4b47a2117aa
     );
 
     public static $prefixDirsPsr4 = array (
-        'eftec\\CliOne\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/eftec/clione/src',
-        ),
-        'eftec\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/eftec/messagecontainer/lib',
-            1 => __DIR__ . '/..' . '/eftec/pdoone/lib',
-        ),
         'Twig\\' => 
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
@@ -92,6 +79,10 @@ class ComposerStaticInite875ae8441d070d7dda5f4b47a2117aa
         'PhpOption\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
         'GrahamCampbell\\ResultType\\' => 
         array (

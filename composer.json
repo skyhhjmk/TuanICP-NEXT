@@ -1,10 +1,10 @@
 {
-    "require": {
-        "vlucas/phpdotenv": "^5.6",
-        "eftec/pdoone": "^4.12",
-        "tedivm/stash": "^1.1",
-        "twig/twig": "^3.14",
-      "ext-pdo": "*",
-      "ext-curl": "*"
-    }
+  "require": {
+    "vlucas/phpdotenv": "^5.6",
+    "tedivm/stash": "^1.1",
+    "twig/twig": "^3.14",
+    "ext-pdo": "*",
+    "ext-curl": "*",
+    "phpmailer/phpmailer": "^6.9"
+  }
 }
