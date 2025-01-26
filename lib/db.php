@@ -35,8 +35,8 @@ function initDatabase()
         ];
 
         try {
-                $pdo = new PDO($dsn, $user, $pass, $options);
-                return $pdo; // 返回 PDO 实例
+            $pdo = new PDO($dsn, $user, $pass, $options);
+            return $pdo; // 返回 PDO 实例
         } catch (PDOException $e) {
             output_error("数据库连接失败: ", $e->getMessage());
         }

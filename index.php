@@ -9,11 +9,8 @@ include APP_ROOT . '/lib/error/error_func.php'; // 错误处理
 include APP_ROOT . '/vendor/autoload.php'; // 加载第三方库
 include APP_ROOT . '/lib/db.php'; // 数据库连接
 include APP_ROOT . '/lib/cache.php'; // 缓存连接
-include APP_ROOT . '/lib/func.php';
-include APP_ROOT . '/lib/func/plugin.php';
-if (file_exists(APP_ROOT . '/install.lock')){
-    load_plugins(); // 加载插件
-}
+include APP_ROOT . '/lib/core.php';
+
 include APP_ROOT . '/lib/router.php'; // 路由，负责匹配路由、返回对应页面
 //$dbc = initDatabase();
 //$config = get_global_site_config();

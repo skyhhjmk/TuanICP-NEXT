@@ -77,7 +77,7 @@ function set_Config($key, $value): bool
  */
 function get_Template_name(): mixed
 {
-    $template_name = get_Config('template_name');
+    $template_name = get_Config('template_name', 'tuan', true);
     if ($template_name === null) {
         set_Config('template_name', 'tuan');
         return 'tuan';
@@ -116,7 +116,7 @@ function getDomainURL()
     return $scheme . '://' . $host;
 }
 
-function get_Url($page , $params = null)
+function get_Url($page, $params = null)
 {
     $dotenv = Dotenv\Dotenv::createImmutable(APP_ROOT);
     $dotenv->load();
@@ -125,7 +125,7 @@ function get_Url($page , $params = null)
     if ($Rewrite === true) {
         if ($params !== null) {
             return '/' . $page . '?' . http_build_query($params);
-        }else{
+        } else {
             return '/' . $page;
         }
     } else {
@@ -175,7 +175,7 @@ function get_Page_vars(array $additionalVars = []): ?array
     $default_page_vars = array();
 
 // 使用 apply_filters 触发钩子，并获取返回值
-    $pluginAddPageVars = apply_filters('add_page_vars',$default_page_vars);
+    $pluginAddPageVars = apply_filters('add_page_vars', $default_page_vars);
 
 // 如果插件返回了值，则合并到 $page_vars 数组中
     if (!empty($pluginAddPageVars) && is_array($pluginAddPageVars)) {

@@ -45,7 +45,7 @@ $routes = [
     ],
 ];
 // 应用过滤器，并获取修改后的路由数组
-$pluginAddVars = apply_filters('page_router',$routes);
+$pluginAddVars = apply_filters('page_router', $routes);
 
 // 如果插件返回了值，则合并到$routes数组中
 // 注意：apply_filters已经返回了合并后的数组，所以这里不需要再次合并

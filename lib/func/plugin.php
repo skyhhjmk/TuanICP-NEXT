@@ -1,21 +1,13 @@
 <?php
 /*
-Plugin Name:        插件名称
-Plugin URL:         插件URL
-Description:        插件描述
-Version:            插件版本
-Author:             插件作者
-Author URL:         插件作者URL
-License:            插件许可证
-License URL:        插件许可证URL
-Text Domain:        插件文本域
-Domain Path:        插件域名路径
+* Name:        插件名称
+* Description:        插件描述
+* Version:            插件版本
+* Author:             插件作者
 */
 if (!defined('APP_ROOT')) {
     exit('Direct access is not allowed.');
 }
-
-include APP_ROOT . '/lib/action.php';
 
 function get_plugin_info($plugin_file)
 {
