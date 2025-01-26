@@ -68,7 +68,7 @@ function globalExceptionHandler($exception)
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>错误提示</title>
+        <title>哎呀，出错了！</title>
         <style>
             body {
                 font-family: 'Arial', sans-serif;
