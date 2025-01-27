@@ -16,8 +16,8 @@ function initTwig(): Environment
         'strict_variables' => false, // 当变量不存在时抛出异常
     ]);
     // 添加菜单和子菜单
-    add_menu('概览', get_Url('admin'));
-    add_menu('站点设置', 'javascript:');
-    add_submenu('javascript:', '插件设置', get_Url('admin/plugin'));
+    add_menu('admin_sidebar', '概览', get_Url('admin'));
+    add_menu('admin_sidebar', '站点设置', 'javascript:');
+    add_submenu('admin_sidebar', 'javascript:', '插件设置', get_Url('admin/plugin'));
     return $twig;
 }

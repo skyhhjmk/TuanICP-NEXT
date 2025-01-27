@@ -269,11 +269,16 @@ function get_Page_vars(array $additionalVars = []): ?array
         ],
         'admin' => [
             'index' => get_Url('admin'),
+            'profile' => get_Url('admin/profile'),
             'login' => get_Url('admin/login'),
             'logout' => get_Url('admin/logout'),
             'plugin' => get_Url('admin/plugin'),
+            'sidebar' => get_menus('admin_sidebar'),
+            'app-store' => get_Url('admin/app-store'),
+            'api' => [
+                'get_plugins' => get_Url('admin/api/get_plugins'),
+            ]
         ],
-        'menus' => get_menus(),
     ];
 // 合并额外的内容到$page_vars数组中
     $page_vars = array_merge($page_vars, $additionalVars);

@@ -32,7 +32,10 @@ $routes = [
         'site' => 'admin/site.php',
         'plugin' => 'admin/plugin.php',
         'app-store' => 'admin/app-store.php',
-        'settings' => 'admin/settings.php'
+        'settings' => 'admin/settings.php',
+        'api' => [
+            'get_plugins' => 'admin/api/get_plugins.php',
+        ],
     ],
 ];
 // 应用过滤器，并获取修改后的路由数组

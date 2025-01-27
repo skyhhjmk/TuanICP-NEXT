@@ -40,23 +40,30 @@
             </div>
             <script type="text/html" id="toolbar">
                 <div class="layui-btn-container">
-                    <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-                    <button class="layui-btn layui-btn-sm" lay-event="getData">获取当前页数据</button>
                     <button class="layui-btn layui-btn-sm layui-btn-primary" id="rowMode">
                         <span>{{ '{{= d.lineStyle ? \'多行\' : \'单行\' }}' }}</span>
                         <i class="layui-icon layui-icon-down layui-font-12"></i>
                     </button>
                 </div>
             </script>
-            <script type="text/html" id="tools">
-                <div class="layui-clear-space">
-                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-                    <a class="layui-btn layui-btn-xs" lay-event="more">
-                        更多
-                        <i class="layui-icon layui-icon-down"></i>
-                    </a>
-                </div>
+            <script type="text/html" id="is_active">
+                {% if d.is_active %}
+                    <a class="layui-btn layui-btn-xs layui-btn-primary layui-border-blue">已启用</a>
+                {% else %}
+                    <a class="layui-btn layui-btn-primary layui-btn-xs layui-border">已禁用</a>
+                {% endif %}
             </script>
+            <script type="text/html" id="tools">
+                {% if d.is_active %}
+                    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="deactivate">禁用</a>
+                {% else %}
+                    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="activate">启用</a>
+                {% endif %}
+            </script>
+
+
+            </script>
+
             <script>
                 layui.use(['table', 'dropdown', 'form', 'layer'], function () {
                     var table = layui.table;
@@ -66,7 +73,7 @@
                     // 创建渲染实例
                     table.render({
                         elem: '#plugin_table',
-                        url: '', // 此处为静态模拟数据，实际使用时需换成真实接口
+                        url: '{{ admin.api.get_plugins }}',
                         toolbar: '#toolbar',
                         defaultToolbar: ['filter', 'exports', 'print'],
                         height: 'full-35', // 最大高度减去其他容器已占有的高度差
@@ -80,12 +87,13 @@
                             {type: 'checkbox', fixed: 'left'},
                             {field: 'plugin_name', width: 130, title: '插件名'},
                             {field: 'plugin_info', title: '插件描述', minWidth: 260, expandedWidth: 260},
-                            {field: 'is_active', width: 130, title: '是否启用'}, // 隐藏字段
+                            {field: 'is_active', width: 130, title: '是否启用', templet: '#is_active'},
                             {field: 'plugin_author', width: 130, title: '插件作者'},
                             {field: 'plugin_version', width: 130, title: '插件版本'},
                             {field: 'plugin_entry', width: 130, title: '插件入口文件', hide: true},
                             {fixed: 'right', title: '操作', width: 134, minWidth: 125, templet: '#tools'}
                         ]],
+
                         done: function () {
                             var id = this.id;
 
@@ -125,187 +133,70 @@
                             console.log(res, msg)
                         }
                     });
-
-                    // 工具栏事件
-                    table.on('toolbar(plugin_table)', function (obj) {
-                        var id = obj.config.id;
-                        var checkStatus = table.checkStatus(id);
-                        var othis = lay(this);
-                        switch (obj.event) {
-                            case 'getCheckData':
-                                var data = checkStatus.data;
-                                layer.alert(layui.util.escape(JSON.stringify(data)));
-                                break;
-                            case 'getData':
-                                var getData = table.getData(id);
-                                console.log(getData);
-                                layer.alert(layui.util.escape(JSON.stringify(getData)));
-                                break;
-                        }
-                    });
-
-
                     // 触发单元格工具事件
-                    table.on('tool(plugin_table)', function (obj) { // 双击 toolDouble
+                    table.on('tool(plugin_table)', function (obj) {
                         var data = obj.data; // 获得当前行数据
-                        // console.log(obj)
-                        if (obj.event === 'edit') {
-                            layer.open({
-                                title: '编辑 - 插件名：' + data.plugin_name,
-                                type: 1,
-                                area: ['80%', '80%'],
-                                content: '<div style="padding: 16px;">还没做</div>'
-                            });
-                        } else if (obj.event === 'more') {
-                            // 更多 - 下拉菜单
-                            dropdown.render({
-                                elem: this, // 触发事件的 DOM 对象
-                                show: true, // 外部事件触发即显示
-                                data: [{
-                                    title: '激活',
-                                    id: 'activate'
-                                }, {
-                                    title: '禁用',
-                                    id: 'deactivate'
-                                }, {
-                                    title: '检查更新',
-                                    id: 'check_update'
-                                }, {
-                                    title: '删除',
-                                    id: 'del'
-                                }],
-                                click: function (menudata) {
-                                    if (menudata.id === 'activate') {
-                                        layer.confirm('确定要激活插件 - 插件名：' + data.plugin_name + ' 么？', function (index) {
-                                            layer.msg('已提交，服务器处理中');
-                                            layer.close(index);
-                                            // 向服务端发送指令
-                                            var customData = {
-                                                action: 'activate',
-                                                plugin_name: data.plugin_name,
-                                                plugin_entry: data.plugin_entry,
-                                            };
-                                            $.ajax({
-                                                type: 'POST',
-                                                url: '/api/v1/plugin.php', // 后端处理脚本的 URL
-                                                data: customData, // 发送表单数据
-                                                dataType: 'json', // 预期服务器返回的数据类型
-                                                success: function (response) {
-                                                    // 根据后端响应弹出提示窗口
-                                                    if (response.status === 'success') {
-                                                        layer.msg(response.message, {icon: 1});
-                                                    } else {
-                                                        layer.msg(response.message, {icon: 2});
-                                                    }
-                                                },
-                                                error: function () {
-                                                    layer.msg('请求失败，请稍后再试', {icon: 2});
-                                                }
-                                            });
-                                            setTimeout(() => {
-                                                table.reload('plugin_table');
-                                            }, 300);
-                                        });
-                                    } else if (menudata.id === 'deactivate') {
-                                        layer.confirm('确认是否禁用插件 - 插件名：' + data.plugin_name + ' 么？', function (index) {
-                                            // obj.del(); // 删除对应行（tr）的DOM结构
-                                            layer.msg('已提交，服务器处理中');
-                                            layer.close(index);
-                                            // 向服务端发送指令
-                                            var customData = {
-                                                action: 'deactivate',
-                                                plugin_name: data.plugin_name,
-                                                plugin_entry: data.plugin_entry,
-                                            };
-                                            $.ajax({
-                                                type: 'POST',
-                                                url: '/api/v1/plugin.php', // 后端处理脚本的 URL
-                                                data: customData, // 发送表单数据
-                                                dataType: 'json', // 预期服务器返回的数据类型
-                                                success: function (response) {
-                                                    // 根据后端响应弹出提示窗口
-                                                    if (response.status === 'success') {
-                                                        layer.msg(response.message, {icon: 1});
-                                                    } else {
-                                                        layer.msg(response.message, {icon: 2});
-                                                    }
-                                                },
-                                                error: function () {
-                                                    layer.msg('请求失败，请稍后再试', {icon: 2});
-                                                }
-                                            });
-                                            setTimeout(() => {
-                                                table.reload('plugin_table');
-                                            }, 300);
-                                        });
-                                    } else if (menudata.id === 'check_update') {
-                                        layer.confirm('是否检查插件 ' + data.plugin_name + ' 的更新？插件必须定义更新地址才能检查！', function (index) {
-                                            layer.msg('已提交，服务器处理中');
-                                            layer.close(index);
-                                            // 向服务端发送指令
-                                            var customData = {
-                                                action: 'check_update',
-                                                plugin_name: data.plugin_name,
-                                                plugin_entry: data.plugin_entry,
-                                            };
-                                            $.ajax({
-                                                type: 'POST',
-                                                url: '/api/v1/plugin.php', // 后端处理脚本的 URL
-                                                data: customData, // 发送表单数据
-                                                dataType: 'json', // 预期服务器返回的数据类型
-                                                success: function (response) {
-                                                    // 根据后端响应弹出提示窗口
-                                                    if (response.status === 'success') {
-                                                        layer.msg(response.message, {icon: 1});
-                                                    } else {
-                                                        layer.msg(response.message, {icon: 2});
-                                                    }
-                                                },
-                                                error: function () {
-                                                    layer.msg('请求失败，请稍后再试', {icon: 2});
-                                                }
-                                            });
-                                            setTimeout(() => {
-                                                table.reload('plugin_table');
-                                            }, 300);
-                                        });
-                                    } else if (menudata.id === 'del') {
-                                        layer.confirm('真的要删除 - 插件名：' + data.plugin_name + ' 吗？', function (index) {
-                                            layer.msg('已提交，服务器处理中');
-                                            layer.close(index);
-                                            // 向服务端发送指令
-                                            var customData = {
-                                                action: 'del',
-                                                plugin_name: data.plugin_name,
-                                                plugin_entry: data.plugin_entry,
-                                            };
-                                            $.ajax({
-                                                type: 'POST',
-                                                url: '/api/v1/plugin.php', // 后端处理脚本的 URL
-                                                data: customData, // 发送表单数据
-                                                dataType: 'json', // 预期服务器返回的数据类型
-                                                success: function (response) {
-                                                    // 根据后端响应弹出提示窗口
-                                                    if (response.status === 'success') {
-                                                        layer.msg(response.message, {icon: 1});
-                                                    } else {
-                                                        layer.msg(response.message, {icon: 2});
-                                                    }
-                                                },
-                                                error: function () {
-                                                    layer.msg('请求失败，请稍后再试', {icon: 2});
-                                                }
-                                            });
-                                            setTimeout(() => {
-                                                table.reload('plugin_table');
-                                            }, 300);
-                                        });
+                        if (obj.event === 'activate') {
+                            layer.confirm('确定要启用插件 - 插件名：' + data.plugin_name + ' 么？', function (index) {
+                                layer.msg('已提交，服务器处理中');
+                                layer.close(index);
+                                // 向服务端发送指令
+                                var customData = {
+                                    action: 'activate',
+                                    plugin_name: data.plugin_name,
+                                    plugin_entry: data.plugin_entry,
+                                };
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/api/v1/plugin.php', // 后端处理脚本的 URL
+                                    data: customData, // 发送表单数据
+                                    dataType: 'json', // 预期服务器返回的数据类型
+                                    success: function (response) {
+                                        // 根据后端响应弹出提示窗口
+                                        if (response.status === 'success') {
+                                            layer.msg(response.message, {icon: 1});
+                                        } else {
+                                            layer.msg(response.message, {icon: 2});
+                                        }
+                                    },
+                                    error: function () {
+                                        layer.msg('请求失败，请稍后再试', {icon: 2});
                                     }
-
-                                },
-                                id: 'dropdown-table-tool',
-                                align: 'right', // 右对齐弹出
-                                style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' // 设置额外样式
+                                });
+                                setTimeout(() => {
+                                    table.reload('plugin_table');
+                                }, 300);
+                            });
+                        } else if (obj.event === 'deactivate') {
+                            layer.confirm('确定要禁用插件 - 插件名：' + data.plugin_name + ' 么？', function (index) {
+                                layer.msg('已提交，服务器处理中');
+                                layer.close(index);
+                                // 向服务端发送指令
+                                var customData = {
+                                    action: 'deactivate',
+                                    plugin_name: data.plugin_name,
+                                    plugin_entry: data.plugin_entry,
+                                };
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/api/v1/plugin.php', // 后端处理脚本的 URL
+                                    data: customData, // 发送表单数据
+                                    dataType: 'json', // 预期服务器返回的数据类型
+                                    success: function (response) {
+                                        // 根据后端响应弹出提示窗口
+                                        if (response.status === 'success') {
+                                            layer.msg(response.message, {icon: 1});
+                                        } else {
+                                            layer.msg(response.message, {icon: 2});
+                                        }
+                                    },
+                                    error: function () {
+                                        layer.msg('请求失败，请稍后再试', {icon: 2});
+                                    }
+                                });
+                                setTimeout(() => {
+                                    table.reload('plugin_table');
+                                }, 300);
                             });
                         }
                     });

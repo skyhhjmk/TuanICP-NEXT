@@ -1,5 +1,5 @@
 <ul class="layui-nav layui-nav-tree" lay-filter="sidebar">
-    {% for menu in menus %}
+    {% for menu in admin.sidebar %}
         <li class="layui-nav-item{% if menu.data.active %} layui-nav-itemed{% endif %}">
             <a href="{{ menu.slug }}">{{ menu.name }}</a>
             {% if menu.children %}
