@@ -1,0 +1,66 @@
+{% include '@admin/header.html.twig' %}
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo layui-hide-xs layui-bg-black">TuanICP</div>
+        <!-- 头部区域（可配合layui 已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item layadmin-flexible" lay-unselect="">
+                <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+                    <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+                </a>
+            </li>
+            <li class="layui-nav-item">
+                <a class="layui-icon layui-icon-refresh-3" href="javascript:;" title="刷新当前页" style="color:#fff;" onclick="refresh()"></i></a>
+            </li>
+        </ul>
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
+                <a href="javascript:">
+                    <img src="//unpkg.com/outeres@0.0.10/img/layui/icon-v2.png" class="layui-nav-img">
+                    tester
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:">个人信息</a></dd>
+                    <dd><a href="javascript:">设置</a></dd>
+                    <dd><a href="javascript:">退出登陆</a></dd>
+                </dl>
+            </li>
+
+        </ul>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+
+            {% include '@admin/inc/left_menu.html.twig' %}
+
+        </div>
+    </div>
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <blockquote class="layui-elem-quote layui-text">
+                欢迎使用 TuanICP v1.0.7
+            </blockquote>
+            <div class="layui-card layui-panel">
+                <div class="layui-card-header">
+                    <p>版本变更</p>
+                </div>
+                <div class="layui-card-body">
+                    <p>
+                        这个版本最大的更新是后台系统的重构，现在后台系统已经可以支持多账号登录，并且可以支持多账号同时登录。</p>
+                </div>
+            </div>
+            <br><br>
+        </div>
+    </div>
+    <div class="layui-footer">
+        <p>“自由”二字看似条条框框，但总有一笔冲出牢笼。</p>
+    </div>
+</div>
+
+<script>
+</script>
+</body>
+</html>

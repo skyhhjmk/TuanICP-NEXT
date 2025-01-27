@@ -1,0 +1,14 @@
+<ul class="layui-nav layui-nav-tree" lay-filter="sidebar">
+    {% for menu in menus %}
+        <li class="layui-nav-item{% if menu.data.active %} layui-nav-itemed{% endif %}">
+            <a href="{{ menu.slug }}">{{ menu.name }}</a>
+            {% if menu.children %}
+                <dl class="layui-nav-child">
+                    {% for child in menu.children %}
+                        <dd><a href="{{ child.slug }}">{{ child.name }}</a></dd>
+                    {% endfor %}
+                </dl>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

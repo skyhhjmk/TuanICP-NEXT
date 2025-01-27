@@ -18,4 +18,5 @@ include APP_ROOT . '/lib/router.php'; // 路由，负责匹配路由、返回对
 //$dbc = initDatabase();
 //$config = get_global_site_config();
 //var_dump($config);
+//do_action('send_mail','1827348941@qq.com', '测试邮件', '测试邮件内容');
 do_action('shutdown');

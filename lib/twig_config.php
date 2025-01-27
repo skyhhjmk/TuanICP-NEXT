@@ -8,12 +8,16 @@ function initTwig(): Environment
     define('TEMPLATE_NAME', get_Template_name());
     $loader = new FilesystemLoader(TUANICP_TEMPLATE_DIR . '/' . TEMPLATE_NAME); // 设置模板位置
     $loader->addPath(TUANICP_TEMPLATE_DIR . '/' . TEMPLATE_NAME, 'index');
-    $loader->addPath(TUANICP_TEMPLATE_DIR . '/' . TEMPLATE_NAME, 'admin');
+    $loader->addPath(TUANICP_TEMPLATE_DIR . '/' . TEMPLATE_NAME . '/admin', 'admin');
     $twig = new Environment($loader, [
         'cache' => APP_ROOT . '/cache', // 设置缓存目录
         'debug' => DEBUG, // 开启调试模式
         'auto_reload' => true, // 当模板文件发生变化时自动重新加载
         'strict_variables' => false, // 当变量不存在时抛出异常
     ]);
+    // 添加菜单和子菜单
+    add_menu('站点概况', 'javascript:');
+    add_submenu('javascript:', '工作负载', 'overview.php');
+    add_submenu('javascript:', '网络负载', 'javascript:');
     return $twig;
 }

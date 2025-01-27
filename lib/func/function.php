@@ -107,7 +107,7 @@ function esc_attr($text) {
 }
 
 /**
- * 获取菜单
+ * 获取页脚菜单
  * @param string $style 样式
  * @return string HTML菜单
  * @throws JsonException
@@ -212,7 +212,6 @@ function get_Page_vars(array $additionalVars = []): ?array
             'audit_duration' => get_Config('audit_duration', '3天', true),
             'feedback_link' => get_Config('feedback_link', 'https://qm.qq.com/q/kClRRuBmOQ', true),
             'background_image' => get_Config('background_image', 'https://cdn.koxiuqiu.cn/ccss/ecyrw/ecy%20(68).png', true),
-            'menu' => get_Menu(),
         ],
         'template' => [
             'root' => '/data/templates/' . get_Template_name(),
@@ -220,7 +219,14 @@ function get_Page_vars(array $additionalVars = []): ?array
         'url' => [
             'index' => '/',
             'id' => get_Url('id'),
-        ]
+        ],
+        'admin' => [
+            'index' => get_Url('admin'),
+            'login' => get_Url('admin/login'),
+            'logout' => get_Url('admin/logout'),
+            'plugin' => get_Url('admin/plugin'),
+        ],
+        'menus' => get_menus(),
     ];
 // 合并额外的内容到$page_vars数组中
     $page_vars = array_merge($page_vars, $additionalVars);
