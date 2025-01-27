@@ -17,7 +17,7 @@ function initTwig(): Environment
     ]);
     // 添加菜单和子菜单
     add_menu('admin_sidebar', '概览', get_Url('admin'));
-    add_menu('admin_sidebar', '站点设置', 'javascript:');
-    add_submenu('admin_sidebar', 'javascript:', '插件设置', get_Url('admin/plugin'));
+    add_menu('admin_sidebar', '插件', 'javascript:');
+    add_submenu('admin_sidebar', 'javascript:', '全部插件', get_Url('admin/plugin'));
     return $twig;
 }

@@ -303,14 +303,29 @@ function load_plugins(): void
 
         // 确保 $plugin_file 是一个有效的字符串路径
         if (is_string($plugin_file) && file_exists($plugin_file)) {
+
+            // 获取插件信息
+            $pluginInfo = get_plugin_info($plugin_file);
+
+            // 检查插件是否包含最基本的注释信息
+            if (!isset($pluginInfo['name']) || !isset($pluginInfo['description']) || !isset($pluginInfo['version']) || !isset($pluginInfo['author'])) {
+                continue; // 跳过本次循环，进行下一轮循环，即跳过该插件的加载
+            }
+
+            // 如果没有 conflicts，定义为 ''
+            if (!isset($pluginInfo['conflicts'])) {
+                $pluginInfo['conflicts'] = '';
+            }
+
+            // 如果没有 dependencies，定义为 ''
+            if (!isset($pluginInfo['dependencies'])) {
+                $pluginInfo['dependencies'] = '';
+            }
             try {
                 // 尝试加载插件文件
                 include_once $plugin_file;
             } catch (Exception $e) {
                 // 捕获并处理加载插件时的异常
-//                writeLog("Error","Error loading plugin {$plugin->name}: " . $e->getMessage());
-//                writeLogFile("Error","Error loading plugin {$plugin->name}: " . $e->getMessage());
-                // 可以在这里记录错误日志，或者进行其他错误处理
                 output_error("Error loading plugin {$plugin->name}: ", $e->getMessage() . PHP_EOL);
             }
         }

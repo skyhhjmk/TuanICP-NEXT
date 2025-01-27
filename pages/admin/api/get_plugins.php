@@ -1,4 +1,7 @@
 <?php
+if (!defined('APP_ROOT')) {
+    exit('Direct access is not allowed.');
+}
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 // 获取所有插件
     $all_plugins = get_all_plugins();

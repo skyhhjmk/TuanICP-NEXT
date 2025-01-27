@@ -35,6 +35,7 @@ $routes = [
         'settings' => 'admin/settings.php',
         'api' => [
             'get_plugins' => 'admin/api/get_plugins.php',
+            'plugin_ctl' => 'admin/api/plugin_ctl.php',
         ],
     ],
 ];

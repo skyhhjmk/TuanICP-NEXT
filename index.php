@@ -6,6 +6,7 @@ define('TUANICP_PLUGIN_DIR', APP_ROOT . '/data/plugins');
 define('TUANICP_TEMPLATE_DIR', APP_ROOT . '/data/templates');
 if(!file_exists(APP_ROOT . '/.env')){
     header('Location: /install/');
+    exit;
 }
 require APP_ROOT . '/lib/globalExceptionHandler.php'; // 全局异常处理，需要在所有文件之前引入
 include APP_ROOT . '/lib/error/error_func.php'; // 错误处理

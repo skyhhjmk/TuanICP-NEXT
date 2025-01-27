@@ -204,11 +204,15 @@
                             layer.open({
                                 type: 0, // page 层类型
                                 area: ['500px', '300px'],
-                                title: 'Hello layer',
-                                shade: 0.6, // 遮罩透明度
-                                shadeClose: true, // 点击遮罩区域，关闭弹层
-                                anim: 0, // 0-6 的动画形式，-1 不开启
-                                content: '<div style="padding: 32px;">一个普通的页面层，传入了自定义的 HTML</div>'
+                                title: '插件详细信息 - ' + data.plugin_name,
+                                shade: 0.6,
+                                shadeClose: true,
+                                anim: 0,
+                                content: '<div style="padding: 32px;">插件名称: ' +
+                                    data.plugin_name + '<br>插件描述: ' +
+                                    data.plugin_info + '<br>作者: ' +
+                                    data.plugin_author + '<br>版本: ' +
+                                    data.plugin_version + '</div>'
                             });
                         }
                     });
