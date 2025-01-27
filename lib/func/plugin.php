@@ -47,8 +47,12 @@ function get_plugin_info($plugin_file)
                 $normalized_key = strtolower(str_replace(' ', '', $key));
 
                 // 将信息存储到数组中
-                $plugin_info[$normalized_key] = $value;
-//                echo "Extracted key-value pair: $normalized_key => $value" . PHP_EOL;
+                if (in_array($normalized_key, ['conflicts', 'dependencies'])) {
+                    // 如果是 conflicts 或 dependencies，存储为数组
+                    $plugin_info[$normalized_key] = array_map('trim', explode(',', $value));
+                } else {
+                    $plugin_info[$normalized_key] = $value;
+                }
             }
         }
 
@@ -139,6 +143,30 @@ function activate_plugin($plugin_name, $plugin_file)
         }
     }
 
+    // 获取插件信息
+    $plugin_info = get_plugin_info($plugin_file);
+    if (isset($plugin_info['conflicts'])) {
+        $conflicts = explode(',', $plugin_info['conflicts']);
+        foreach ($conflicts as $conflict) {
+            $conflict = trim($conflict);
+            if (is_plugin_active($conflict)) {
+                // 如果存在冲突的插件已激活，返回失败
+                return false;
+            }
+        }
+    }
+
+    if (isset($plugin_info['dependencies'])) {
+        $dependencies = explode(',', $plugin_info['dependencies']);
+        foreach ($dependencies as $dependency) {
+            $dependency = trim($dependency);
+            if (!is_plugin_active($dependency)) {
+                // 如果存在依赖的插件未激活，返回失败
+                return false;
+            }
+        }
+    }
+
     // 添加新插件到数组，存储为对象
     $activePlugins[] = (object)['name' => $plugin_name, 'file' => $plugin_file];
 
@@ -183,6 +211,19 @@ function deactivate_plugin($plugin_name, $plugin_file)
 
     // 重新索引数组
     $activePlugins = array_values($activePlugins);
+
+    // 检查是否有其他插件依赖于被停用的插件
+    foreach ($activePlugins as $plugin) {
+        $plugin_info = get_plugin_info($plugin->file);
+        if (isset($plugin_info['dependencies'])) {
+            foreach ($plugin_info['dependencies'] as $dependency) {
+                if ($dependency == $plugin_name) {
+                    // 如果找到依赖于被停用插件的插件，递归停用该插件
+                    deactivate_plugin($plugin->name, $plugin->file);
+                }
+            }
+        }
+    }
 
     // 序列化插件信息数组
     $serialized_plugin_info = serialize($activePlugins);
