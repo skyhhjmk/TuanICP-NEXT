@@ -59,6 +59,8 @@
                 {% else %}
                     <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="activate">启用</a>
                 {% endif %}
+                <!-- 添加详细信息按钮 -->
+                <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="detail">详细信息</a>
             </script>
 
 
@@ -87,11 +89,11 @@
                             {type: 'checkbox', fixed: 'left'},
                             {field: 'plugin_name', width: 130, title: '插件名'},
                             {field: 'plugin_info', title: '插件描述', minWidth: 260, expandedWidth: 260},
-                            {field: 'is_active', width: 130, title: '是否启用', templet: '#is_active'},
-                            {field: 'plugin_author', width: 130, title: '插件作者'},
-                            {field: 'plugin_version', width: 130, title: '插件版本'},
-                            {field: 'plugin_entry', width: 130, title: '插件入口文件', hide: true},
-                            {fixed: 'right', title: '操作', width: 134, minWidth: 125, templet: '#tools'}
+                            {field: 'is_active', width: 100, title: '状态', templet: '#is_active'},
+                            {field: 'plugin_author', width: 130, title: '作者'},
+                            {field: 'plugin_version', width: 110, title: '版本'},
+                            {field: 'plugin_entry', width: 1, title: '插件入口文件', hide: true},
+                            {fixed: 'right', title: '操作', width: 160, minWidth: 125, templet: '#tools'}
                         ]],
 
                         done: function () {
@@ -197,6 +199,16 @@
                                 setTimeout(() => {
                                     table.reload('plugin_table');
                                 }, 300);
+                            });
+                        } else if (obj.event === 'detail') {
+                            layer.open({
+                                type: 0, // page 层类型
+                                area: ['500px', '300px'],
+                                title: 'Hello layer',
+                                shade: 0.6, // 遮罩透明度
+                                shadeClose: true, // 点击遮罩区域，关闭弹层
+                                anim: 0, // 0-6 的动画形式，-1 不开启
+                                content: '<div style="padding: 32px;">一个普通的页面层，传入了自定义的 HTML</div>'
                             });
                         }
                     });
