@@ -4,63 +4,90 @@ if (!defined('APP_ROOT')) {
 }
 
 /**
- * @param $key
+ * 获取配置项的值，如果配置项不存在，则返回默认值
+ * @param string $key 设置项
+ * @param null $default 默认值
+ * @param bool $init
+ * @param bool $useCache
  * @return mixed|null
  * @throws JsonException
  */
-function get_Config($key, $default = null, $init = false): mixed
+function get_Config(string $key, $default = null, bool $init = false, bool $useCache = true): mixed
 {
-    // 初始化缓存池，如果缓存被禁用，则 $cachePool 为 null
-    $cachePool = initCache();
+    if ($useCache) {
+        // 初始化缓存池，如果缓存被禁用，则 $cachePool 为 null
+        $cachePool = initCache();
 
-    // 定义缓存项的键
-    $cacheKey = 'config_' . $key;
+        // 定义缓存项的键
+        $cacheKey = 'config_' . $key;
 
-    // 如果缓存池不为 null，尝试从缓存中获取数据
-    if ($cachePool !== null) {
-        $item = $cachePool->getItem($cacheKey);
-        if ($item->isHit()) {
-            // 缓存命中，直接返回缓存中的数据
-            return $item->get();
-        }
-    }
-
-    // 初始化数据库连接
-    $dbc = initDatabase();
-    $query = "SELECT v FROM config WHERE k = :key";
-    $stmt = $dbc->prepare($query);
-    $stmt->bindParam(':key', $key);
-    $stmt->execute();
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($result) {
-        // 如果查询结果存在，保存到缓存中（如果缓存池不为 null）
+        // 如果缓存池不为 null，尝试从缓存中获取数据
         if ($cachePool !== null) {
-            $item->set($result['v']);
-            $cachePool->save($item);
-        }
-        return $result['v'];
-    } else {
-        if ($init) {
-            // 如果需要初始化配置，则调用 set_Config 函数
-            set_Config($key, $default);
-            // 保存默认值到缓存中（如果缓存池不为 null）
-            if ($cachePool !== null) {
-                $item->set($default);
-                $cachePool->save($item);
+            $item = $cachePool->getItem($cacheKey);
+            if ($item->isHit()) {
+                // 缓存命中，直接返回缓存中的数据
+                return $item->get();
             }
         }
-        return $default;
+
+        // 初始化数据库连接
+        $dbc = initDatabase();
+        $query = "SELECT v FROM config WHERE k = :key";
+        $stmt = $dbc->prepare($query);
+        $stmt->bindParam(':key', $key);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            // 如果查询结果存在，保存到缓存中（如果缓存池不为 null）
+            if ($cachePool !== null) {
+                $item->set($result['v']);
+                $cachePool->save($item);
+            }
+            return $result['v'];
+        } else {
+            if ($init) {
+                // 如果需要初始化配置，则调用 set_Config 函数
+                set_Config($key, $default);
+                // 保存默认值到缓存中（如果缓存池不为 null）
+                if ($cachePool !== null) {
+                    $item->set($default);
+                    $cachePool->save($item);
+                }
+            }
+            return $default;
+        }
+    } else {
+        // 初始化数据库连接
+        $dbc = initDatabase();
+        $query = "SELECT v FROM config WHERE k = :key";
+        $stmt = $dbc->prepare($query);
+        $stmt->bindParam(':key', $key);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            return $result['v'];
+        } else {
+            if ($init) {
+                // 如果需要初始化配置，则调用 set_Config 函数
+                set_Config($key, $default);
+            }
+            return $default;
+        }
     }
+
+
 }
 
 /**
- * @param $key
- * @param $value
- * @return bool
+ * 设置配置项的值
+ * @param string $key 设置项
+ * @param mixed $value 设置的值
+ * @return bool 是否设置成功
  * @throws JsonException
  */
-function set_Config($key, $value): bool
+function set_Config(string $key, mixed $value): bool
 {
     $dbc = initDatabase();
     $query = "INSERT INTO config (k, v) VALUES (:key, :value) ON DUPLICATE KEY UPDATE v = :value";
@@ -73,6 +100,7 @@ function set_Config($key, $value): bool
 
 /**
  * 获取启用的主题名称
+ * 如果没有启用的主题，则默认使用tuan
  * @return mixed
  * @throws JsonException
  */
@@ -92,7 +120,8 @@ function get_Template_name(): mixed
  * @param string $text 要转义的字符串
  * @return string 转义后的字符串
  */
-function esc_html($text) {
+function esc_html($text)
+{
     return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
 }
 
@@ -102,7 +131,8 @@ function esc_html($text) {
  * @param string $text 要转义的字符串
  * @return string 转义后的字符串
  */
-function esc_attr($text) {
+function esc_attr($text)
+{
     return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
 }
 
@@ -121,11 +151,11 @@ function get_Menu(string $style = 'bottom'): string
         ],
     ];
     $serInit = serialize($init);
-    $menu = get_Config('menu',$serInit, true);
+    $menu = get_Config('menu', $serInit, true);
     $unserializedMenu = unserialize($menu);
 
     // 允许插件通过过滤器修改菜单样式
-    $filteredMenu = apply_filters('get_menu_style',$unserializedMenu, $style);
+    $filteredMenu = apply_filters('get_menu_style', $unserializedMenu, $style);
 
     // 将菜单转换为HTML字符串
     $htmlMenu = convertMenuToHtml($filteredMenu, $style);
@@ -139,19 +169,23 @@ function get_Menu(string $style = 'bottom'): string
  * @param string $style 菜单样式
  * @return string HTML菜单
  */
-function convertMenuToHtml(array $menu, string$style): string
+function convertMenuToHtml(array $menu, string $style): string
 {
     // 根据样式和菜单数据生成HTML
     $html = '<ul class="' . esc_attr($style) . '-menu">';
-    foreach ($menu as$menuItem) {
+    foreach ($menu as $menuItem) {
         $html .= '<li>' . esc_html($menuItem['title']) . '</li>';
     }
     $html .= '</ul>';
     return $html;
 }
 
-
-function getFullURL()
+/**
+ * 获取当前的URL
+ * eg: https://example.com/xxx
+ * @return string
+ */
+function getFullURL(): string
 {
     $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'];
@@ -161,7 +195,12 @@ function getFullURL()
 }
 
 
-function getDomainURL()
+/**
+ * 获取域名的URL
+ * eg: https://example.com
+ * @return string
+ */
+function getDomainURL(): string
 {
     $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'];
@@ -169,13 +208,20 @@ function getDomainURL()
     return $scheme . '://' . $host;
 }
 
-function get_Url($page, $params = null)
+/**
+ * 获取一个页面的URL
+ * 自动判断是否伪静态
+ * @param $page
+ * @param $params
+ * @return string
+ */
+function get_Url($page, $params = null): string
 {
     $dotenv = Dotenv\Dotenv::createImmutable(APP_ROOT);
     $dotenv->load();
-    $dotenv->required('REWRITE');
+    $dotenv->required('REWRITE')->notEmpty();
     $Rewrite = $_ENV['REWRITE'] ?? false;
-    if ($Rewrite === true) {
+    if ($Rewrite) {
         if ($params !== null) {
             return '/' . $page . '?' . http_build_query($params);
         } else {
@@ -191,6 +237,7 @@ function get_Url($page, $params = null)
 }
 
 /**
+ * 获取页面变量，用于渲染模板
  * @param array $additionalVars
  * @return array|null
  * @throws JsonException

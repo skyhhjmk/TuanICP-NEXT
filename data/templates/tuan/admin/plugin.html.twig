@@ -1,46 +1,14 @@
-{% include 'header.html.twig' %}
+{% include '@admin/inc/header.html.twig' %}
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
         <div class="layui-logo layui-hide-xs layui-bg-black">TuanICP</div>
         <!-- 头部区域（可配合layui 已有的水平导航） -->
-        <ul class="layui-nav layui-layout-left">
-            <!-- 移动端显示 -->
-            <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-header-event="menuLeft">
-                <i class="layui-icon layui-icon-spread-left"></i>
-            </li>
-            <li class="layui-nav-item layui-hide-xs"><a href="/admin-next">返回后台首页</a></li>
-            <li class="layui-nav-item layui-hide-xs"><a href="/">返回站点首页</a></li>
-            <li class="layui-nav-item layui-hide-xs"><a href="javascript:">快捷方式3</a></li>
-            <li class="layui-nav-item">
-                <a href="javascript:">快速访问</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="plugin/maker.php">插件构建器</a></dd>
-                    <dd><a href="template/maker.php">模板构建器</a></dd>
+        {% include '@admin/inc/top_nav.html.twig' %}
 
-                </dl>
-            </li>
-        </ul>
-        <ul class="layui-nav layui-layout-right">
-            <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
-                <a href="javascript:">
-                    <img src="//unpkg.com/outeres@0.0.10/img/layui/icon-v2.png" class="layui-nav-img">
-                    tester
-                </a>
-                <dl class="layui-nav-child">
-                    <dd><a href="javascript:">个人信息</a></dd>
-                    <dd><a href="javascript:">设置</a></dd>
-                    <dd><a href="javascript:">退出登陆</a></dd>
-                </dl>
-            </li>
-
-        </ul>
     </div>
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
-            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-
-                {% include 'inc/left_menu.html.twig' %}
-
+            {% include '@admin/inc/left_menu.html.twig' %}
         </div>
     </div>
     <div class="layui-body">
@@ -75,7 +43,7 @@
                     <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
                     <button class="layui-btn layui-btn-sm" lay-event="getData">获取当前页数据</button>
                     <button class="layui-btn layui-btn-sm layui-btn-primary" id="rowMode">
-                        <span>{{= d.lineStyle ? '多行' : '单行' }}模式</span>
+                        <span>{{ '{{= d.lineStyle ? \'多行\' : \'单行\' }}' }}</span>
                         <i class="layui-icon layui-icon-down layui-font-12"></i>
                     </button>
                 </div>
@@ -98,7 +66,7 @@
                     // 创建渲染实例
                     table.render({
                         elem: '#plugin_table',
-                        url: '/api/v1/getplugin.php', // 此处为静态模拟数据，实际使用时需换成真实接口
+                        url: '', // 此处为静态模拟数据，实际使用时需换成真实接口
                         toolbar: '#toolbar',
                         defaultToolbar: ['filter', 'exports', 'print'],
                         height: 'full-35', // 最大高度减去其他容器已占有的高度差
