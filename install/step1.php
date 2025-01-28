@@ -43,6 +43,68 @@ $all_passed = $php_version_check['status'] == '通过' && !in_array('失败', $e
 
 // 如果有任何检查失败，显示错误信息
 if (!$all_passed) {
+    echo '<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TuanICP安装向导 - 环境检查</title>
+    <style>
+        /* 在这里添加CSS样式 */
+        .success {
+            color: green;
+        }
+
+        .failure {
+            color: red;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .button-container {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .next-button, .force-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .next-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .force-button {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .checkbox-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>';
     echo "<div class='container'>";
     echo "<h1>TuanICP安装向导 - 环境检查</h1>";
     echo "<p class='failure'>环境检查未通过，请解决以下问题后再继续安装：</p>";
@@ -76,7 +138,8 @@ if (!$all_passed) {
 }
 
 // HTML 输出
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
