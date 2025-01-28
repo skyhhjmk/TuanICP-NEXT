@@ -7,12 +7,20 @@ if(file_exists(INSTALL_ROOT . '/../.env')){
     exit;
 }
 
-include INSTALL_ROOT . '/../vendor/autoload.php'; // 加载第三方库
-
-$install_part = $_GET['part'] ?? 'step1';
-
-if ($install_part == 'step1') {
-    include INSTALL_ROOT . '/inc/step1.php';
-} elseif ($install_part == 'step2') {
-    include INSTALL_ROOT . '/inc/step2.php';
-}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>安装</title>
+    <style>
+    </style>
+</head>
+<body>
+<h1>安装</h1>
+<p>欢迎使用 TuanICP 安装向导</p>
+<button>
+    <a href="./step1.php">开始安装</a>
+</button>
+</body>
+</html>
