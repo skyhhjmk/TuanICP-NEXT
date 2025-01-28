@@ -107,6 +107,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // 确定缓存配置成功后，追加配置信息到.env文件
     if ($pool && $info_msg == "<p class='success'> " . $cache_type . "缓存配置成功</p>") {
         $envFilePath = __DIR__ . '/../.env'; // 假设.env文件位于当前脚本上一级目录
+        function generateRandomKey($length = 64) {
+            return bin2hex(random_bytes($length / 2));
+        }
+
 
         // 构建要追加的配置信息
         $envConfig = "
@@ -120,7 +124,9 @@ REDIS_DB=" . $redis_db . "# 连接Redis的数据库
 MEMCACHED_HOST=" . $memcache_server . "# memcached模式下生效
 MEMCACHED_PORT=" . $memcache_port . "# memcached模式下生效
 # 伪静态开关，配置伪静态后设置为true，否则设置为false
-REWRITE=true";
+REWRITE=true
+# Cookie密钥
+COOKIE_KEY=" . generateRandomKey() . "# 更改后所有登陆状态将失效";
 
         // 追加配置信息到.env文件
         try {

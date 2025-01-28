@@ -324,6 +324,18 @@ function get_Page_vars(array $additionalVars = []): ?array
     return $page_vars;
 }
 
+// 检查是否使用SSL
+function is_ssl() {
+    if (isset($_SERVER['HTTPS'])) {
+        if ('on' == strtolower($_SERVER['HTTPS']) || '1' ==$_SERVER['HTTPS']) {
+            return true;
+        }
+    } elseif (isset($_SERVER['SERVER_PORT']) && ('443' ==$_SERVER['SERVER_PORT'])) {
+        return true;
+    }
+    return false;
+}
+
 function isAdmin()
 {
 

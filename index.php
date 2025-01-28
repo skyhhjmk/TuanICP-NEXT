@@ -29,9 +29,17 @@
 
 define('APP_ROOT', __DIR__);
 define('DEBUG', true);
+
 // 定义插件目录常量
 define('TUANICP_PLUGIN_DIR', APP_ROOT . '/data/plugins');
 define('TUANICP_TEMPLATE_DIR', APP_ROOT . '/data/templates');
+
+// 定义一天中的秒数
+define('DAY_IN_SECONDS', 86400);
+
+// 定义cookie域
+define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST']);
+
 if(!file_exists(APP_ROOT . '/.env')){
     header('Location: /install/');
     exit;
