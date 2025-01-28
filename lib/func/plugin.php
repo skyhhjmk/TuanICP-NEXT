@@ -159,6 +159,20 @@ function get_active_plugins(): array
 
 function activate_plugin($plugin_name, $plugin_file)
 {
+    // 初始化缓存池，如果缓存被禁用，则 $cachePool 为 null
+    $cachePool = initCache();
+
+    // 定义要清除的缓存项的键
+    $cacheKey = 'active_plugins';
+
+    // 检查缓存池是否不为 null
+    if ($cachePool !== null) {
+        // 从缓存池中获取缓存项
+        $item =$cachePool->getItem($cacheKey);
+        // 清除缓存项
+        $cachePool->deleteItem($cacheKey);
+    }
+
     $pdo = initDatabase();
     // 获取当前所有启用的插件
     $activePlugins = get_active_plugins();
@@ -217,6 +231,19 @@ function activate_plugin($plugin_name, $plugin_file)
 
 function deactivate_plugin($plugin_name, $plugin_file)
 {
+    // 初始化缓存池，如果缓存被禁用，则 $cachePool 为 null
+    $cachePool = initCache();
+
+    // 定义要清除的缓存项的键
+    $cacheKey = 'active_plugins';
+
+    // 检查缓存池是否不为 null
+    if ($cachePool !== null) {
+        // 从缓存池中获取缓存项
+        $item =$cachePool->getItem($cacheKey);
+        // 清除缓存项
+        $cachePool->deleteItem($cacheKey);
+    }
     $pdo = initDatabase();
     // 获取当前所有启用的插件
     $activePlugins = get_active_plugins();
@@ -301,6 +328,8 @@ function get_all_plugins(): array
                             "plugin_version" => $plugin_info['version'] ?? '',
                             "plugin_author" => $plugin_info['author'] ?? '',
                             "plugin_entry" => $plugin_info_file, // 添加插件入口文件路径
+                            "plugin_conflicts" => $plugin_info['conflicts'] ?? '',
+                            "plugin_dependencies" => $plugin_info['dependencies'] ?? '',
                             "is_active" => is_plugin_active($plugin_info_file) // 添加激活状态
                         ];
                         // 将插件对象添加到数组中

@@ -46,22 +46,6 @@
                     </button>
                 </div>
             </script>
-            <script type="text/html" id="is_active">
-                {% if d.is_active %}
-                    <a class="layui-btn layui-btn-xs layui-btn-primary layui-border-blue">已启用</a>
-                {% else %}
-                    <a class="layui-btn layui-btn-primary layui-btn-xs layui-border">已禁用</a>
-                {% endif %}
-            </script>
-            <script type="text/html" id="tools">
-                {% if d.is_active %}
-                    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="deactivate">禁用</a>
-                {% else %}
-                    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="activate">启用</a>
-                {% endif %}
-                <!-- 添加详细信息按钮 -->
-                <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="detail">详细信息</a>
-            </script>
 
 
             </script>
@@ -89,11 +73,29 @@
                             {type: 'checkbox', fixed: 'left'},
                             {field: 'plugin_name', width: 130, title: '插件名'},
                             {field: 'plugin_info', title: '插件描述', minWidth: 260, expandedWidth: 260},
-                            {field: 'is_active', width: 100, title: '状态', templet: '#is_active'},
+                            {
+                                field: 'is_active', width: 100, title: '状态', templet: function (d) {
+                                    if (d.is_active === true) {
+                                        return '<a class="layui-btn layui-btn-xs layui-btn-primary layui-border-blue">已启用</a>';
+                                    } else {
+                                        return '<a class="layui-btn layui-btn-primary layui-btn-xs layui-border">已禁用</a>';
+                                    }
+                                }
+                            },
                             {field: 'plugin_author', width: 130, title: '作者'},
                             {field: 'plugin_version', width: 110, title: '版本'},
                             {field: 'plugin_entry', width: 1, title: '插件入口文件', hide: true},
-                            {fixed: 'right', title: '操作', width: 160, minWidth: 125, templet: '#tools'}
+                            {
+                                fixed: 'right', title: '操作', width: 160, minWidth: 125, templet: function (d) {
+                                    if (d.is_active === true) {
+                                        return '<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="deactivate">禁用</a>' +
+                                            '<a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="detail">详细信息</a>';
+                                    } else {
+                                        return '<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="activate">启用</a>' +
+                                            '<a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="detail">详细信息</a>';
+                                    }
+                                }
+                            }
                         ]],
 
                         done: function () {
@@ -150,7 +152,7 @@
                                 };
                                 $.ajax({
                                     type: 'POST',
-                                    url: '/api/v1/plugin.php', // 后端处理脚本的 URL
+                                    url: '{{ admin.api.plugin_ctl }}', // 后端处理脚本的 URL
                                     data: customData, // 发送表单数据
                                     dataType: 'json', // 预期服务器返回的数据类型
                                     success: function (response) {
@@ -166,7 +168,9 @@
                                     }
                                 });
                                 setTimeout(() => {
-                                    table.reload('plugin_table');
+                                    table.reloadData('plugin_table', {
+                                        scrollPos: 'fixed',
+                                    });
                                 }, 300);
                             });
                         } else if (obj.event === 'deactivate') {
@@ -181,7 +185,7 @@
                                 };
                                 $.ajax({
                                     type: 'POST',
-                                    url: '/api/v1/plugin.php', // 后端处理脚本的 URL
+                                    url: '{{ admin.api.plugin_ctl }}', // 后端处理脚本的 URL
                                     data: customData, // 发送表单数据
                                     dataType: 'json', // 预期服务器返回的数据类型
                                     success: function (response) {
@@ -197,7 +201,9 @@
                                     }
                                 });
                                 setTimeout(() => {
-                                    table.reload('plugin_table');
+                                    table.reloadData('plugin_table', {
+                                        scrollPos: 'fixed',
+                                    });
                                 }, 300);
                             });
                         } else if (obj.event === 'detail') {
@@ -208,11 +214,13 @@
                                 shade: 0.6,
                                 shadeClose: true,
                                 anim: 0,
-                                content: '<div style="padding: 32px;">插件名称: ' +
-                                    data.plugin_name + '<br>插件描述: ' +
-                                    data.plugin_info + '<br>作者: ' +
-                                    data.plugin_author + '<br>版本: ' +
-                                    data.plugin_version + '</div>'
+                                content: '<div style="padding: 16px;">插件名称: ' + data.plugin_name +
+                                    '<br>插件描述: ' + data.plugin_info +
+                                    '<br>作者: ' + data.plugin_author +
+                                    '<br>版本: ' + data.plugin_version +
+                                    '<br>冲突的插件: ' + data.plugin_conflicts +
+                                    '<br>依赖的插件: ' + data.plugin_dependencies +
+                                    '</div>'
                             });
                         }
                     });

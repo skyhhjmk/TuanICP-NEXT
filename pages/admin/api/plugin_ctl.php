@@ -75,6 +75,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             $path = $plugin_entry;
             if(activate_plugin($name , $path)){
+                // 初始化缓存池，如果缓存被禁用，则 $cachePool 为 null
+                $cachePool = initCache();
+
+                // 定义要清除的缓存项的键
+                $cacheKey = 'active_plugins';
+
+                // 检查缓存池是否不为 null
+                if ($cachePool !== null) {
+                    // 从缓存池中获取缓存项
+                    $item =$cachePool->getItem($cacheKey);
+                    // 清除缓存项
+                    $cachePool->deleteItem($cacheKey);
+                }
                 $response = [
                     'status' => 'success',
                     'plugin_name' => $plugin_name,
@@ -82,11 +95,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'message' => '已激活'
                 ];
             } else {
+                // 初始化缓存池，如果缓存被禁用，则 $cachePool 为 null
+                $cachePool = initCache();
+
+                // 定义要清除的缓存项的键
+                $cacheKey = 'active_plugins';
+
+                // 检查缓存池是否不为 null
+                if ($cachePool !== null) {
+                    // 从缓存池中获取缓存项
+                    $item =$cachePool->getItem($cacheKey);
+                    // 清除缓存项
+                    $cachePool->deleteItem($cacheKey);
+                }
                 $response = [
                     'status' => 'error',
                     'plugin_name' => $plugin_name,
                     'action' => 'activate',
-                    'message' => '插件已经被激活'
+                    'message' => '插件已经被激活或存在冲突，如果误判请再次尝试'
                 ];
             }
 
@@ -104,6 +130,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             $path = $plugin_entry;
             if(deactivate_plugin($name , $path)){
+                // 初始化缓存池，如果缓存被禁用，则 $cachePool 为 null
+                $cachePool = initCache();
+
+                // 定义要清除的缓存项的键
+                $cacheKey = 'active_plugins';
+
+                // 检查缓存池是否不为 null
+                if ($cachePool !== null) {
+                    // 从缓存池中获取缓存项
+                    $item =$cachePool->getItem($cacheKey);
+                    // 清除缓存项
+                    $cachePool->deleteItem($cacheKey);
+                }
                 $response = [
                     'status' => 'success',
                     'plugin_name' => $plugin_name,
@@ -111,11 +150,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'message' => '已禁用'
                 ];
             } else {
+                // 初始化缓存池，如果缓存被禁用，则 $cachePool 为 null
+                $cachePool = initCache();
+
+                // 定义要清除的缓存项的键
+                $cacheKey = 'active_plugins';
+
+                // 检查缓存池是否不为 null
+                if ($cachePool !== null) {
+                    // 从缓存池中获取缓存项
+                    $item =$cachePool->getItem($cacheKey);
+                    // 清除缓存项
+                    $cachePool->deleteItem($cacheKey);
+                }
                 $response = [
                     'status' => 'error',
                     'plugin_name' => $plugin_name,
                     'action' => 'activate',
-                    'message' => '插件已经被禁用'
+                    'message' => '插件已经被禁用，如果误判请再次尝试'
                 ];
             }
             break;
@@ -125,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'status' => 'success',
                 'plugin_name' => $plugin_name,
                 'action' => 'delete',
-                'message' => '已删除审核'
+                'message' => '已删除'
             ];
             break;
         case 'check_update':
