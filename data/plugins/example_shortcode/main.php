@@ -6,12 +6,13 @@
 * Author:             风屿Wind
 */
 // 定义短代码处理器
-function my_shortcode_handler($atts,$content = null, $tag,$ignore_html = false) {
+function my_shortcode_handler($atts, $content = null, $tag, $ignore_html = false)
+{
     // 提取属性并设置默认值
     $atts = shortcode_atts(array(
         'title' => 'Default Title',
         'class' => '',
-    ), $atts,$tag);
+    ), $atts, $tag);
 
     // 根据属性生成输出
     $output = '<div class="' . esc_attr($atts['class']) . '">';
@@ -31,7 +32,8 @@ add_shortcode('my_shortcode', 'my_shortcode_handler');
 // [my_shortcode title="My Custom Title" class="my-custom-class"]This is the content[/my_shortcode]
 
 // 为了演示，我们可以模拟一个简单的函数来处理短代码文本
-function process_shortcode_text($text) {
+function process_shortcode_text($text)
+{
     return do_shortcode($text);
 }
 

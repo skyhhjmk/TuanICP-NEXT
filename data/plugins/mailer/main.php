@@ -7,9 +7,11 @@
 */
 
 use PHPMailer\PHPMailer\PHPMailer;
+
 require 'vendor/autoload.php';
 
-function ces_phpmailer_send($args) {
+function ces_phpmailer_send($args)
+{
     // 引入 PHPMailer 类
 
     $mail = new PHPMailer;
@@ -25,19 +27,21 @@ function ces_phpmailer_send($args) {
 
     $mail->setFrom('admin@notify.biliwind.com', 'Mailer');
     $mail->addAddress($args['to'], 'Recipient Name');
-    $mail->Subject =$args['subject'];
-    $mail->Body    =$args['message'];
+    $mail->Subject = $args['subject'];
+    $mail->Body = $args['message'];
 
     return $mail->send();
 }
 
 // 注册插件
-function ces_register_plugin() {
+function ces_register_plugin()
+{
     add_filter('core_sendmail', 'ces_phpmailer_send', 10, 1);
 }
 
 // 注销插件
-function ces_unregister_plugin() {
+function ces_unregister_plugin()
+{
     remove_filter('core_sendmail', 'ces_phpmailer_send', 10);
 }
 

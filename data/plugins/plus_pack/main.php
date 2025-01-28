@@ -1,6 +1,7 @@
 <?php
 // 注册一个自定义过滤器 'page_router' 用于添加新的路由
-function register_plus_pack_routes($routes) {
+function register_plus_pack_routes($routes)
+{
     // 添加新的路由条目
     $new_routes = [
         'about' => 'about.php', // 新的关于页面
@@ -24,7 +25,7 @@ function register_plus_pack_routes($routes) {
     ];
 
     // 合并新的路由到原始路由数组中
-    return array_replace_recursive($routes,$new_routes);
+    return array_replace_recursive($routes, $new_routes);
 }
 
 // 使用 'page_router' 过滤器钩子添加自定义路由

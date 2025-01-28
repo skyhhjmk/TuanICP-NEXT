@@ -136,13 +136,22 @@ function globalExceptionHandler($exception)
     <div class="container">
         <div class="error-title">哎呀，出错了！</div>
         <div class="error-message">我们遇到了一些问题，请稍后再试。</div>
-        <?php if (DEBUG === true): ?>
-            <div class="solution">可能的原因: <?php echo $solution; ?></div>
+        <?php
+        if (DEBUG === true): ?>
+            <div class="solution">可能的原因: <?php
+                echo $solution; ?></div>
             <div class="debug-info" style="display: block;">
-            <pre>未捕获的异常[code:<?php echo $code; ?>]: '<?php echo $message; ?>' <?php echo PHP_EOL; ?>在 <?php echo $file; ?> 的第 <?php echo $line; ?> 行。
-堆栈跟踪: <?php echo $trace; ?></pre>
+            <pre>未捕获的异常[code:<?php
+                echo $code; ?>]: '<?php
+                echo $message; ?>' <?php
+                echo PHP_EOL; ?>在 <?php
+                echo $file; ?> 的第 <?php
+                echo $line; ?> 行。
+堆栈跟踪: <?php
+                echo $trace; ?></pre>
             </div>
-        <?php endif; ?>
+        <?php
+        endif; ?>
         <a href="/" class="back-home-button">返回首页</a>
     </div>
     </body>

@@ -49,7 +49,6 @@ if (!$all_passed) {
     <meta charset="UTF-8">
     <title>TuanICP安装向导 - 环境检查</title>
     <style>
-        /* 在这里添加CSS样式 */
         .success {
             color: green;
         }

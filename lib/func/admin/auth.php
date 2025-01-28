@@ -6,7 +6,8 @@
  * @param string $password 密码
  * @return bool 验证结果
  */
-function authenticate_user($username, $password) {
+function authenticate_user($username, $password)
+{
     // 应用过滤器以允许自定义验证逻辑
     $is_valid = apply_filters('authenticate', false, $username, $password);
 
@@ -28,7 +29,8 @@ function authenticate_user($username, $password) {
  * @param string $password 密码
  * @return bool 验证结果
  */
-function default_authenticate_user($username, $password) {
+function default_authenticate_user($username, $password)
+{
     // 这里可以添加默认的验证逻辑，例如从数据库中验证用户名和密码
     // 示例：假设我们有一个函数 get_user_password($username) 可以获取用户的密码
     $stored_password = get_user_password($username);
@@ -40,7 +42,8 @@ function default_authenticate_user($username, $password) {
  * @param string $username 用户名
  * @return string|null 用户的密码哈希
  */
-function get_user_password($username) {
+function get_user_password($username)
+{
     // 这里应该实现从数据库中获取用户密码的逻辑
     // 示例：假设我们有一个数据库查询来获取用户密码
     // $result = db_query("SELECT password FROM users WHERE username = ?", $username);

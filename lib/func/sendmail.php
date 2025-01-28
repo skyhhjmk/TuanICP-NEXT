@@ -20,4 +20,4 @@ function default_core_sendmail($override, $to, $subject, $message)
 // 注册默认的邮件发送方式
 add_filter('core_sendmail', 'default_core_sendmail', 10, 4);
 //var_dump($GLOBALS['tuanicp_filters'], $GLOBALS['tuanicp_actions']);
-add_action('send_mail' , 'core_sendmail', 10, 3);
+add_action('send_mail', 'core_sendmail', 10, 3);

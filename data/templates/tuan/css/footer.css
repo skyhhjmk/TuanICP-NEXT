@@ -9,6 +9,7 @@
     height: 15px;
     margin-right: 0px;
 }
+
 .footer {
     position: fixed; /* 使用固定定位 */
     left: 0; /* 左侧对齐 */
@@ -23,6 +24,7 @@
     border-radius: 5px; /* 边框圆角 */
     backdrop-filter: blur(10px); /* 背景模糊效果 */
 }
+
 /* 底部链接样式 */
 .footer a {
     color: white; /* 文本颜色 */
