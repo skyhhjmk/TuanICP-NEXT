@@ -35,46 +35,64 @@ function initCache(): ?Pool
         case 'apcu':
             if (extension_loaded('apcu')) {
                 $driver = new Apcu();
+                $driver->setOptions(['ttl' => 3600, 'namespace' => md5(__FILE__)]);
             } else {
                 output_error('APCu 扩展未加载。');
             }
             break;
         case 'file':
             $path = APP_ROOT . '/cache';
-            $driver = new FileSystem(array('path' => $path));
+            $driver = new FileSystem(['path' => $path]);
             break;
         case 'memcache':
-            $dotenv->required(['MEMCACHE_SERVER']);
-            $server = $_ENV['MEMCACHE_SERVER'];
-            $driver = new Memcache(array('servers' => array($server)));
+        case 'memcached':
+            if (extension_loaded('memcached') || extension_loaded('memcache')) {
+                $dotenv->required(['MEMCACHED_SERVER', 'MEMCACHED_PORT']);
+                $server = $_ENV['MEMCACHED_SERVER'] ?? '127.0.0.1';
+                $port = $_ENV['MEMCACHED_PORT'] ?? 11211; // 默认端口 11211
+                $driver = new Memcache(['servers' => [['server' => $server, 'port' => $port]]]);
+            } else {
+                output_error('Memcache(d) 扩展未加载。');
+            }
             break;
         case 'redis':
-            $dotenv->required(['REDIS_SERVER', 'REDIS_PORT']);
-            $server = $_ENV['REDIS_SERVER'];
-            $port = $_ENV['REDIS_PORT'];
-            $password = $_ENV['REDIS_PASSWORD'] ?? '';
-            $redisOptions = array(
-                'servers' => array(array(
+            $dotenv->required(['REDIS_SERVER', 'REDIS_PORT', 'REDIS_PASSWORD', 'REDIS_DB']);
+            $server = $_ENV['REDIS_SERVER'] ?? '127.0.0.1';
+            $port = $_ENV['REDIS_PORT'] ?? 6379;
+            $password = $_ENV['REDIS_PASSWORD'] ?? null;
+            $databaseIndex = $_ENV['REDIS_DB'] ?? null; // 支持设置数据库编号
+
+            $redisOptions = [
+                'servers' => [[
                     'server' => $server,
                     'port' => $port,
-                    'password' => $password
-                ))
-            );
-            if (!empty($password)) {
-                $redisOptions['servers'][0]['password'] = $password;
+                    'password' => $password, // 如果密码为空，则不会设置密码字段
+                    'database' => $databaseIndex, // 如果设置了数据库编号，则使用该数据库
+                ]]
+            ];
+
+            // 如果密码为空，则从配置中移除
+            if (empty($password)) {
+                unset($redisOptions['servers'][0]['password']);
             }
+
+            // 如果数据库编号未设置，则从配置中移除
+            if ($databaseIndex === null) {
+                unset($redisOptions['servers'][0]['database']);
+            }
+
             $driver = new Redis($redisOptions);
             break;
+
         case 'ephemeral':
+        default:
             $driver = new Ephemeral();
             break;
-        default:
-            output_error('不支持的缓存驱动: ' . $CACHE_TYPE);
     }
 
     if ($driver !== null) {
         // 设置全局过期时间，例如 3600 秒（1 小时）
-        $pool = new Pool($driver, ['ttl' => 3600]);
+        $pool = new Pool($driver);
         return $pool;
     } else {
         output_error('缓存驱动初始化失败。');

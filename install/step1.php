@@ -1,4 +1,8 @@
 <?php
+if (file_exists('install.lock')){
+    header('Location: /');
+    exit();
+}
 // 定义检查函数
 function check_php_version($required_version)
 {
@@ -47,8 +51,9 @@ if (!$all_passed) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>TuanICP安装向导 - 环境检查</title>
+    <title>TuanICP-NEXT安装向导 - 环境检查</title>
     <style>
+    
         .success {
             color: green;
         }
@@ -105,7 +110,7 @@ if (!$all_passed) {
 </head>
 <body>';
     echo "<div class='container'>";
-    echo "<h1>TuanICP安装向导 - 环境检查</h1>";
+    echo "<h1>TuanICP<span>NEXT</span>安装向导 - 环境检查</h1>";
     echo "<p class='failure'>环境检查未通过，请解决以下问题后再继续安装：</p>";
     echo "<table>";
     echo "<tr><th>检查项</th><th>状态</th><th>备注</th></tr>";
@@ -142,8 +147,25 @@ if (!$all_passed) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>TuanICP安装向导 - 环境检查</title>
+    <title>TuanICP-NEXT安装向导 - 环境检查</title>
     <style>
+        @keyframes rainbow-text-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .rainbow-text {
+            font-size: 48px;
+            font-weight: bold;
+            background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet);
+            background-size: 600% 600%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent; /* Fallback for browsers that don't support gradients */
+            animation: rainbow-text-animation 6s ease-in-out infinite;
+        }
         /* 在这里添加CSS样式 */
         .success {
             color: green;
@@ -201,7 +223,7 @@ if (!$all_passed) {
 </head>
 <body>
 <div class='container'>
-    <h1>TuanICP安装向导 - 环境检查</h1>
+    <h1>TuanICP<span class="rainbow-text">NEXT</span>安装向导 - 环境检查</h1>
     <table>
         <tr>
             <th>检查项</th>
@@ -228,6 +250,8 @@ if (!$all_passed) {
             <td><?= $directory_check['note'] ?></td>
         </tr>
     </table>
+    <p>请将下方的伪静态内容配置到服务器（仅Nginx需要设置，Apache/OpenLiteSpeed/LiteSpeed无需配置，其他Web服务器请根据实际情况进行修改）</p>
+    <textarea style="width: 100%; height: 150px;" readonly><?php include '../nginx.htaccess';?></textarea>
     <?php
     if ($all_passed): ?>
         <div class='button-container'>
