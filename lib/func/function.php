@@ -142,71 +142,6 @@ function get_Template_name(): mixed
     return $template_name;
 }
 
-/**
- * 转义HTML内容中的字符串
- * 通常用于直接插入HTML标签之间的文本
- * @param string $text 要转义的字符串
- * @return string 转义后的字符串
- */
-function esc_html($text)
-{
-    return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
-}
-
-/**
- * 转义HTML属性值中的字符串
- * 通常用于HTML标签的属性值
- * @param string $text 要转义的字符串
- * @return string 转义后的字符串
- */
-function esc_attr($text)
-{
-    return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
-}
-
-/**
- * 获取页脚菜单
- * @param string $style 样式
- * @return string HTML菜单
- * @throws JsonException
- */
-function get_Menu(string $style = 'bottom'): string
-{
-    $init = [
-        '首页' => [
-            'title' => '首页',
-            'url' => get_Url('index'),
-        ],
-    ];
-    $serInit = serialize($init);
-    $menu = get_Config('menu', $serInit, true);
-    $unserializedMenu = unserialize($menu);
-
-    // 允许插件通过过滤器修改菜单样式
-    $filteredMenu = apply_filters('get_menu_style', $unserializedMenu, $style);
-
-    // 将菜单转换为HTML字符串
-    $htmlMenu = convertMenuToHtml($filteredMenu, $style);
-
-    return $htmlMenu;
-}
-
-/**
- * 将菜单数据转换为HTML字符串
- * @param array $menu 菜单数据
- * @param string $style 菜单样式
- * @return string HTML菜单
- */
-function convertMenuToHtml(array $menu, string $style): string
-{
-    // 根据样式和菜单数据生成HTML
-    $html = '<ul class="' . esc_attr($style) . '-menu">';
-    foreach ($menu as $menuItem) {
-        $html .= '<li>' . esc_html($menuItem['title']) . '</li>';
-    }
-    $html .= '</ul>';
-    return $html;
-}
 
 /**
  * 获取当前的URL
@@ -306,21 +241,16 @@ function get_Page_vars(array $additionalVars = []): ?array
             'api' => [
                 'get_plugins' => get_Url('admin/api/get_plugins'),
                 'plugin_ctl' => get_Url('admin/api/plugin_ctl'),
-            ]
+            ],
         ],
+        'menu' => [
+            'footer' => get_menus('footer'),
+        ]
     ];
-// 合并额外的内容到$page_vars数组中
-    $page_vars = array_merge($page_vars, $additionalVars);
-// 定义一个默认的返回值
-    $default_page_vars = array();
 
 // 使用 apply_filters 触发钩子，并获取返回值
-    $pluginAddPageVars = apply_filters('add_page_vars', $default_page_vars);
+    $page_vars = apply_filters('page_vars', $page_vars,$page_vars);
 
-// 如果插件返回了值，则合并到 $page_vars 数组中
-    if (!empty($pluginAddPageVars) && is_array($pluginAddPageVars)) {
-        $page_vars = array_merge($page_vars, $pluginAddPageVars);
-    }
     return $page_vars;
 }
 

@@ -75,12 +75,7 @@ function get_plugin_info($plugin_file)
                 $normalized_key = strtolower(str_replace(' ', '', $key));
 
                 // 将信息存储到数组中
-                if (in_array($normalized_key, ['conflicts', 'dependencies'])) {
-                    // 如果是 conflicts 或 dependencies，存储为数组
-                    $plugin_info[$normalized_key] = array_map('trim', explode(',', $value));
-                } else {
-                    $plugin_info[$normalized_key] = $value;
-                }
+                $plugin_info[$normalized_key] = $value;
             }
         }
 
@@ -168,7 +163,7 @@ function activate_plugin($plugin_name, $plugin_file)
     // 检查缓存池是否不为 null
     if ($cachePool !== null) {
         // 从缓存池中获取缓存项
-        $item =$cachePool->getItem($cacheKey);
+        $item = $cachePool->getItem($cacheKey);
         // 清除缓存项
         $cachePool->deleteItem($cacheKey);
     }
@@ -240,7 +235,7 @@ function deactivate_plugin($plugin_name, $plugin_file)
     // 检查缓存池是否不为 null
     if ($cachePool !== null) {
         // 从缓存池中获取缓存项
-        $item =$cachePool->getItem($cacheKey);
+        $item = $cachePool->getItem($cacheKey);
         // 清除缓存项
         $cachePool->deleteItem($cacheKey);
     }

@@ -33,7 +33,7 @@ CREATE TABLE sites
     user_id         INT          NOT NULL,
     site_name       VARCHAR(255) NOT NULL,
     site_domain        VARCHAR(255) NOT NULL,
-    site_icp_number VARCHAR(8) NOT NULL UNIQUE,
+    site_icp_number VARCHAR(255) NOT NULL UNIQUE,
     site_desc       TEXT,
     site_avatar_url VARCHAR(255),
     site_config     TEXT,

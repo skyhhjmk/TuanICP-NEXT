@@ -39,22 +39,6 @@ $uri = trim($uri, '/');
 $routes = [
     '' => 'home.php',
     'id' => 'id.php',
-    'contact' => 'contact.php',
-    'api' => [
-        'v1' => [
-            'global' => [
-                'getinfo' => 'api/v1/global/GetInfo.php', // 获取站点信息
-                'setinfo' => 'api/ApiV1SetInfo.php', // 设置站点信息
-            ],
-            'site' => [
-                'getinfo' => 'api/v1/site/GetInfo.php',
-            ],
-            'plugin' => [
-                'getplugin' => 'api/v1/plugin/getplugin.php',
-                'plugin_api' => 'api/v1/plugin/plugin_api.php',
-            ],
-        ]
-    ],
     'admin' => [
         '' => 'admin/index.php', // 默认页面
         'site' => 'admin/site.php',
@@ -68,7 +52,7 @@ $routes = [
     ],
 ];
 // 应用过滤器，并获取修改后的路由数组
-$pluginAddVars = apply_filters('page_router', $routes);
+$pluginAddVars = apply_filters('page_router', $routes,$routes);
 
 // 注意：apply_filters已经返回了合并后的数组，所以这里不需要再次合并
 if (!empty($pluginAddVars)) {
@@ -130,6 +114,8 @@ $page = handleRoute($parts, $routes);
 $file = APP_ROOT . '/pages/' . $page;
 if (file_exists($file)) {
     include $file;
+} elseif (file_exists($page)) {
+    include $page;
 } else {
     header("HTTP/1.0 404 Not Found");
     include APP_ROOT . '/pages/404.php';

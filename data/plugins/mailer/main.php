@@ -8,45 +8,33 @@
 
 use PHPMailer\PHPMailer\PHPMailer;
 
-require 'vendor/autoload.php';
+require 'vendor/phpmailer/phpmailer/src/Exception.php';
+require 'vendor/phpmailer/phpmailer/src/PHPMailer.php';
+require 'vendor/phpmailer/phpmailer/src/SMTP.php';
 
-function ces_phpmailer_send($args)
+
+function ces_phpmailer_send($tag,$to, $subject, $message)
 {
     // 引入 PHPMailer 类
 
-    $mail = new PHPMailer;
-
+    $mail = new PHPMailer(true);
     // 设置 PHPMailer 参数
     $mail->isSMTP(); // 使用 SMTP
     $mail->Host = 'smtp.qiye.aliyun.com';
     $mail->SMTPAuth = true;
-    $mail->Username = 'admin@notify.biliwind.com';
-    $mail->Password = 'rmILuSMZ2jA966pm';
-    $mail->SMTPSecure = 'tls';
-    $mail->Port = 587;
+    $mail->Username = '';
+    $mail->Password = '';
+    $mail->SMTPSecure = 'ssl';
+    $mail->Port = 465;
 
-    $mail->setFrom('admin@notify.biliwind.com', 'Mailer');
-    $mail->addAddress($args['to'], 'Recipient Name');
-    $mail->Subject = $args['subject'];
-    $mail->Body = $args['message'];
+    $mail->setFrom('', '');
+    $mail->addAddress($to);
+    $mail->Subject = $subject;
+    $mail->Body = $message;
 
     return $mail->send();
 }
 
-// 注册插件
-function ces_register_plugin()
-{
-    add_filter('core_sendmail', 'ces_phpmailer_send', 10, 1);
-}
 
-// 注销插件
-function ces_unregister_plugin()
-{
-    remove_filter('core_sendmail', 'ces_phpmailer_send', 10);
-}
-
-// 激活插件
-add_action('load_plugin', 'ces_register_plugin');
-
-// 卸载插件
-add_action('unload_plugin', 'ces_register_plugin');
+remove_filter('core_sendmail', 'default_core_sendmail');
+add_filter('core_sendmail', 'ces_phpmailer_send', 10, 4);

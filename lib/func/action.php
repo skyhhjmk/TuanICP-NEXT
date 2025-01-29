@@ -28,7 +28,7 @@ function do_action($tag, ...$args)
     }
 }
 
-function add_filter($tag, $function_to_add, $priority = 10, $accepted_args = 1)
+function add_filter($tag,$function_to_add, $priority = 10,$accepted_args = 1)
 {
     global $tuanicp_filters;
     if (is_callable($function_to_add)) {
@@ -37,7 +37,7 @@ function add_filter($tag, $function_to_add, $priority = 10, $accepted_args = 1)
             'accepted_args' => $accepted_args
         );
     } else {
-        trigger_error("The function is not callable", E_USER_WARNING);
+        trigger_error("The function '{$function_to_add}' is not callable", E_USER_WARNING);
     }
 }
 

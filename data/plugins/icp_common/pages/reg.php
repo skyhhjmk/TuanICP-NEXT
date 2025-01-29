@@ -26,36 +26,43 @@
  * 若使用本软件且在未经许可的情况下进行商业活动，我们有权追回您进行商业活动的所得资产（仅使用本软件产生的资产）并要求您支付相应的商业授权和赔偿费用或要求您停止商业行为。
  * 最终解释权归风屿团所有开发成员所有。
  */
-
-define('APP_ROOT', __DIR__);
-define('DEBUG', true);
-
-// 定义插件目录常量
-define('TUANICP_PLUGIN_DIR', APP_ROOT . '/data/plugins');
-define('TUANICP_TEMPLATE_DIR', APP_ROOT . '/data/templates');
-
-// 定义一天中的秒数
-define('DAY_IN_SECONDS', 86400);
-
-// 定义cookie域
-define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST']);
-
-if(!file_exists(APP_ROOT . '/.env')){
-    header('Location: /install/');
-    exit;
+if (!defined('APP_ROOT')) {
+    exit('Direct access is not allowed.');
 }
-session_start();
-require APP_ROOT . '/lib/globalExceptionHandler.php'; // 全局异常处理，需要在所有文件之前引入
-include APP_ROOT . '/lib/error/error_func.php'; // 错误处理
-include APP_ROOT . '/vendor/autoload.php'; // 加载第三方库
-include APP_ROOT . '/lib/db.php'; // 数据库连接
-include APP_ROOT . '/lib/cache.php'; // 缓存连接
-include APP_ROOT . '/lib/core.php';
 
-do_action('startup'); // 路由前执行，可以用来拦截访问次数过多等
-include APP_ROOT . '/lib/router.php'; // 路由，负责匹配路由、返回对应页面
-//$dbc = initDatabase();
-//$config = get_global_site_config();
-//var_dump($config);
-//do_action('send_mail','admin@biliwind.com', '测试邮件', '测试邮件内容');
-do_action('shutdown');
+function reg_add_page_router($page_router)
+{
+    $user_icp_number = $_GET['icp_number'] ?? '';
+    $addRouters = [
+        'user' => [
+            'icp_number' => $user_icp_number,
+            'current_time' => date('Y-m-d H:i:s'),
+        ],
+    ];
+
+    $page_router = array_merge($page_router, $addRouters);
+
+    return $page_router;
+}
+add_filter('page_router', 'reg_add_page_router');
+
+function reg_add_page_vars($page_vars)
+{
+    $user_icp_number = $_GET['icp_number'] ?? '';
+    $addVars = [
+        'user' => [
+            'icp_number' => $user_icp_number,
+            'current_time' => date('Y-m-d H:i:s'),
+        ],
+        'url' => [
+            'reg' => get_Url('reg'),
+        ],
+    ];
+
+    $page_vars = array_merge($page_vars, $addVars);
+
+    return $page_vars;
+}
+add_filter('page_vars', 'reg_add_page_vars',10,1);
+$twig = initTwig();
+echo $twig->render('@index/reg.html.twig', get_Page_vars());
