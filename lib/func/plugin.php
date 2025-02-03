@@ -87,6 +87,58 @@ function get_plugin_info($plugin_file)
     return $plugin_info;
 }
 
+function get_all_plugins(): array
+{
+
+    // 初始化一个空数组来存储插件信息
+    $all_plugins = [];
+
+    // 检查目录是否存在
+    if (is_dir(TUANICP_PLUGIN_DIR)) {
+        // 打开目录
+        $dir = opendir(TUANICP_PLUGIN_DIR);
+        // 循环读取目录下的所有条目
+        while (($subdir = readdir($dir)) !== false) {
+            // 跳过'.'和'..'这两个特殊的目录
+            if ($subdir != "." && $subdir != "..") {
+                // 检查是否为目录
+                if (is_dir(TUANICP_PLUGIN_DIR . '/' . $subdir)) {
+                    // 构建插件信息文件路径
+                    $plugin_info_file = TUANICP_PLUGIN_DIR . '/' . $subdir . '/main.php';
+//                    echo "Processing plugin info file: " . $plugin_info_file . PHP_EOL;
+
+                    // 获取插件信息
+                    $plugin_info = get_plugin_info($plugin_info_file);
+
+                    if ($plugin_info) {
+                        // 构建插件对象
+                        $plugin = [
+                            "plugin_name" => $plugin_info['name'] ?? '',
+                            "plugin_info" => $plugin_info['description'] ?? '',
+                            "plugin_version" => $plugin_info['version'] ?? '',
+                            "plugin_author" => $plugin_info['author'] ?? '',
+                            "plugin_entry" => $plugin_info_file, // 添加插件入口文件路径
+                            "plugin_conflicts" => $plugin_info['conflicts'] ?? '',
+                            "plugin_dependencies" => $plugin_info['dependencies'] ?? '',
+                            "is_active" => is_plugin_active($plugin_info_file) // 添加激活状态
+                        ];
+                        // 将插件对象添加到数组中
+                        $all_plugins[] = $plugin;
+//                        echo "Added plugin: " . $plugin_info['Plugin Name'] . PHP_EOL;
+                    } else {
+                        output_error("无法获取插件信息: ", $plugin_info_file . PHP_EOL);
+                    }
+                }
+            }
+        }
+        // 关闭目录
+        closedir($dir);
+    } else {
+        output_error("插件目录不存在: ", TUANICP_PLUGIN_DIR . PHP_EOL);
+    }
+
+    return $all_plugins;
+}
 
 function is_plugin_active($plugin_file): bool
 {
@@ -290,59 +342,6 @@ function deactivate_plugin($plugin_name, $plugin_file)
 
     // 返回成功
     return true;
-}
-
-function get_all_plugins(): array
-{
-
-    // 初始化一个空数组来存储插件信息
-    $all_plugins = [];
-
-    // 检查目录是否存在
-    if (is_dir(TUANICP_PLUGIN_DIR)) {
-        // 打开目录
-        $dir = opendir(TUANICP_PLUGIN_DIR);
-        // 循环读取目录下的所有条目
-        while (($subdir = readdir($dir)) !== false) {
-            // 跳过'.'和'..'这两个特殊的目录
-            if ($subdir != "." && $subdir != "..") {
-                // 检查是否为目录
-                if (is_dir(TUANICP_PLUGIN_DIR . '/' . $subdir)) {
-                    // 构建插件信息文件路径
-                    $plugin_info_file = TUANICP_PLUGIN_DIR . '/' . $subdir . '/main.php';
-//                    echo "Processing plugin info file: " . $plugin_info_file . PHP_EOL;
-
-                    // 获取插件信息
-                    $plugin_info = get_plugin_info($plugin_info_file);
-
-                    if ($plugin_info) {
-                        // 构建插件对象
-                        $plugin = [
-                            "plugin_name" => $plugin_info['name'] ?? '',
-                            "plugin_info" => $plugin_info['description'] ?? '',
-                            "plugin_version" => $plugin_info['version'] ?? '',
-                            "plugin_author" => $plugin_info['author'] ?? '',
-                            "plugin_entry" => $plugin_info_file, // 添加插件入口文件路径
-                            "plugin_conflicts" => $plugin_info['conflicts'] ?? '',
-                            "plugin_dependencies" => $plugin_info['dependencies'] ?? '',
-                            "is_active" => is_plugin_active($plugin_info_file) // 添加激活状态
-                        ];
-                        // 将插件对象添加到数组中
-                        $all_plugins[] = $plugin;
-//                        echo "Added plugin: " . $plugin_info['Plugin Name'] . PHP_EOL;
-                    } else {
-                        output_error("无法获取插件信息: ", $plugin_info_file . PHP_EOL);
-                    }
-                }
-            }
-        }
-        // 关闭目录
-        closedir($dir);
-    } else {
-        output_error("插件目录不存在: ", TUANICP_PLUGIN_DIR . PHP_EOL);
-    }
-
-    return $all_plugins;
 }
 
 function load_plugins(): void

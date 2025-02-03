@@ -1,9 +1,11 @@
 <?php
 require_once 'func/function.php';
+require_once 'func/cron.php';
 require_once 'func/action.php';
 require_once 'func/plugin.php';
 require_once 'func/menu.php';
 require_once 'func/sendmail.php';
+require_once 'func/settings_func.php';
 
 // 添加菜单和子菜单
 add_menu('admin_sidebar', '概览', get_Url('admin'));

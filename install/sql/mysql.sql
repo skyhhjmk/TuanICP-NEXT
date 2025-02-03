@@ -71,3 +71,14 @@ CREATE TABLE config
     v TEXT
 ) ENGINE = InnoDB;
 
+-- 创建计划任务表
+CREATE TABLE `cron_jobs` (
+                             `id` int NOT NULL AUTO_INCREMENT,
+                             `hook` varchar(255) NOT NULL,
+                             `schedule` varchar(255) DEFAULT NULL,
+                             `args` text,
+                             `next_run` datetime DEFAULT NULL,
+                             `last_run` datetime DEFAULT NULL,
+                             `status` tinyint(1) DEFAULT '0', -- 0: 禁用, 1: 启用
+                             PRIMARY KEY (`id`)
+);

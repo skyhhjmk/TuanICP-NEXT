@@ -26,33 +26,38 @@
  * 若使用本软件且在未经许可的情况下进行商业活动，我们有权追回您进行商业活动的所得资产（仅使用本软件产生的资产）并要求您支付相应的商业授权和赔偿费用或要求您停止商业行为。
  * 最终解释权归风屿团所有开发成员所有。
  */
-if (!defined('APP_ROOT')) {
-    exit('Direct access is not allowed.');
+
+
+function add_cron_job($hook, $schedule,$args = array(), $nextRun = null) {
+    $pdo = initDatabase();
+    $args = json_encode($args);
+    $nextRun =$nextRun ?: date('Y-m-d H:i:s', strtotime($schedule));
+    $stmt =$pdo->prepare("INSERT INTO cron_jobs (hook, schedule, args, next_run, status) VALUES (:hook, :schedule, :args, :next_run, 1)");
+    $stmt->execute([':hook' =>$hook, ':schedule' => $schedule, ':args' =>$args, ':next_run' => $nextRun]);
 }
-define('REG_PLUGIN_ROOT', __DIR__);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-    // TODO: 判断提交的备案号是否存在，不存在则插入数据
-    exit;
+function remove_cron_job($id) {
+    $pdo = initDatabase();
+    $stmt =$pdo->prepare("DELETE FROM cron_jobs WHERE id = :id");
+    $stmt->execute([':id' =>$id]);
 }
 
-function reg_add_page_vars($page_vars)
-{
-    $user_icp_number = $_GET['icp_number'] ?? '';
-    $addVars = [
-        'user' => [
-            'icp_number' => $user_icp_number,
-            'current_time' => date('Y-m-d H:i:s'),
-        ],
-        'url' => [
-            'reg' => get_Url('reg'),
-        ],
-    ];
-
-    $page_vars = array_merge($page_vars, $addVars);
-
-    return $page_vars;
+function toggle_cron_job_status($id, $status) {
+    $pdo = initDatabase();
+    $stmt =$pdo->prepare("UPDATE cron_jobs SET status = :status WHERE id = :id");
+    $stmt->execute([':status' =>$status, ':id' => $id]);
 }
-add_filter('page_vars', 'reg_add_page_vars',10,1);
-$twig = initTwig();
-echo $twig->render('@index/reg.html.twig', get_Page_vars());
+
+function execute_cron_jobs() {
+    $pdo = initDatabase();
+    $stmt =$pdo->query("SELECT * FROM cron_jobs WHERE status = 1 AND next_run <= NOW()");
+    while ($job =$stmt->fetch()) {
+        // 执行任务
+        call_user_func_array($job['hook'], json_decode($job['args'], true));
+
+        // 更新任务下次执行时间和最后执行时间
+        $nextRun = date('Y-m-d H:i:s', strtotime($job['schedule'], strtotime($job['next_run'])));
+        $stmtUpdate =$pdo->prepare("UPDATE cron_jobs SET last_run = NOW(), next_run = :next_run WHERE id = :id");
+        $stmtUpdate->execute([':next_run' =>$nextRun, ':id' => $job['id']]);
+    }
+}

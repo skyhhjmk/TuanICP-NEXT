@@ -1,0 +1,106 @@
+{% include '@admin/inc/header.html.twig' %}
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo layui-hide-xs layui-bg-black">TuanICP</div>
+        <!-- 头部区域（可配合layui 已有的水平导航） -->
+        {% include '@admin/inc/top_nav.html.twig' %}
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            {% include '@admin/inc/left_menu.html.twig' %}
+        </div>
+    </div>
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <div class="layui-card layui-panel">
+                <div class="layui-card-header">插件市场</div>
+                <div class="layui-card-body">
+                    <!-- 插件搜索 -->
+                    <div class="layui-form" style="margin-bottom: 10px;">
+                        <div class="layui-input-inline">
+                            <input type="text" name="search" placeholder="搜索插件" autocomplete="off" class="layui-input">
+                        </div>
+                        <button class="layui-btn layui-btn-normal">搜索</button>
+                    </div>
+                    <!-- 插件列表 -->
+                    <table class="layui-table" lay-skin="line">
+                        <colgroup>
+                            <col width="150">
+                            <col width="200">
+                            <col width="150">
+                            <col width="150">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>插件名称</th>
+                            <th>描述</th>
+                            <th>版本</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- 插件项 -->
+                        {% for plugin in plugins %}
+                            <tr>
+                                <td>{{ plugin.name }}</td>
+                                <td>{{ plugin.description }}</td>
+                                <td>{{ plugin.version }}</td>
+                                <td>
+                                    {% if plugin.status == 'not_installed' %}
+                                        <span class="layui-btn layui-btn-primary layui-border layui-btn-xs">未安装</span>
+                                    {% elseif plugin.status == 'installed' %}
+                                        <span class="layui-btn layui-btn-primary layui-border-green layui-btn-xs">已安装</span>
+                                    {% elseif plugin.status == 'activated' %}
+                                        <span class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs">已激活</span>
+                                    {% elseif plugin.status == 'unavailable' %}
+                                        <span class="layui-btn layui-btn-primary layui-border-red layui-btn-xs">不可用</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if plugin.status == 'not_installed' %}
+                                        <button class="layui-btn layui-btn-xs layui-btn-normal" onclick="installPlugin('{{ plugin.id }}')">安装</button>
+                                    {% elseif plugin.status == 'installed' %}
+                                        <button class="layui-btn layui-btn-xs" onclick="activatePlugin('{{ plugin.id }}')">激活</button>
+                                    {% elseif plugin.status == 'activated' %}
+                                        <button class="layui-btn layui-btn-xs  layui-btn-warm " onclick="updatePlugin('{{ plugin.id }}')">尝试更新</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br><br>
+        </div>
+    </div>
+    <div class="layui-footer">
+        <p>“自由”二字看似条条框框，但总有一笔冲出牢笼。</p>
+    </div>
+</div>
+
+<script>
+    // 这里是JavaScript代码，用于处理插件安装、激活和更新的逻辑
+    function installPlugin(pluginId) {
+        // 调用后端接口安装插件
+        console.log('安装插件：' + pluginId);
+        // 这里可以添加AJAX请求代码
+    }
+
+    function activatePlugin(pluginId) {
+        // 调用后端接口激活插件
+        console.log('激活插件：' + pluginId);
+        // 这里可以添加AJAX请求代码
+    }
+
+    function updatePlugin(pluginId) {
+        // 调用后端接口更新插件
+        console.log('更新插件：' + pluginId);
+        // 这里可以添加AJAX请求代码
+    }
+</script>
+</body>
+</html>

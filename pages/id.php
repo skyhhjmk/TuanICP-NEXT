@@ -19,7 +19,6 @@ $icp_record = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // 如果没有找到记录，则弹窗提示并跳转
 if (!$icp_record) {
-    // 使用单行注释
     echo "<script>alert('没有找到对应的ICP备案信息。');</script>";
     echo "<script>window.location.href='/';</script>";
     exit;
@@ -69,4 +68,4 @@ function id_add_page_vars($page_vars)
 add_filter('page_router', 'icp_user_page_router');
 
 $twig = initTwig();
-echo $twig->render('@index/home.html.twig', get_Page_vars());
+echo $twig->render('@index/id.html.twig', get_Page_vars());

@@ -43,7 +43,6 @@ $routes = [
         '' => 'admin/index.php', // 默认页面
         'site' => 'admin/site.php',
         'plugin' => 'admin/plugin.php',
-        'app-store' => 'admin/app-store.php',
         'settings' => 'admin/settings.php',
         'api' => [
             'get_plugins' => 'admin/api/get_plugins.php',

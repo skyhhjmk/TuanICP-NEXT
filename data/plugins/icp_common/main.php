@@ -12,7 +12,6 @@ if (!defined('APP_ROOT')) {
 }
 define('ICP_COMMON_DIR', __DIR__);
 
-// 定义icp_common_page_router函数
 function icp_common_page_router($routes) {
     $newRoutes = [
         'reg' => ICP_COMMON_DIR . '/pages/reg.php',
