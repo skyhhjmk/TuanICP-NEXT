@@ -1,2 +1,4 @@
-/.env
-/cache/
+/super/system_a/.env
+/super/system_b/.env
+/super/system_a/cache/
+/boot_loader/slot

@@ -31,6 +31,20 @@
       <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
       <path value="$PROJECT_DIR$/data/plugins/mailer/vendor/composer" />
       <path value="$PROJECT_DIR$/data/plugins/mailer/vendor/phpmailer/phpmailer" />
+      <path value="$PROJECT_DIR$/system/data/plugins/mailer/vendor/composer" />
+      <path value="$PROJECT_DIR$/system/data/plugins/mailer/vendor/phpmailer/phpmailer" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/phpoption/phpoption" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/graham-campbell/result-type" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/symfony/polyfill-php81" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/composer" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/tedivm/stash" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/vlucas/phpdotenv" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/psr/cache" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1">

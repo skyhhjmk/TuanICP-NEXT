@@ -26,39 +26,5 @@
  * 若使用本软件且在未经许可的情况下进行商业活动，我们有权追回您进行商业活动的所得资产（仅使用本软件产生的资产）并要求您支付相应的商业授权和赔偿费用或要求您停止商业行为。
  * 最终解释权归风屿团所有开发成员所有。
  */
-if (!defined('APP_ROOT')) {
-    exit('Direct access is not allowed.');
-}
-define('REG_PLUGIN_ROOT', __DIR__);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-    // TODO: 判断提交的备案号是否存在，不存在则插入数据
-    $icp_number = $_POST['icp_number'] ?? '';
-    if ($icp_number){
-        $dbc = initDatabase();
-        $stmt = $dbc->prepare("INSERT INTO sites (site_icp_number) VALUES (:icp_number)");
-        $stmt->execute([':icp_number' => $icp_number]);
-    }
-    exit;
-}
-
-function reg_add_page_vars($page_vars)
-{
-    $user_icp_number = $_GET['icp_number'] ?? '';
-    $addVars = [
-        'user' => [
-            'icp_number' => $user_icp_number,
-            'current_time' => date('Y-m-d H:i:s'),
-        ],
-        'url' => [
-            'reg' => get_Url('reg'),
-        ],
-    ];
-
-    $page_vars = array_merge($page_vars, $addVars);
-
-    return $page_vars;
-}
-add_filter('page_vars', 'reg_add_page_vars',10,1);
-$twig = initTwig();
-echo $twig->render('@index/reg.html.twig', get_Page_vars());
+exit();

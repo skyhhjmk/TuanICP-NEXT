@@ -27,35 +27,78 @@
  * 最终解释权归风屿团所有开发成员所有。
  */
 
-define('APP_ROOT', __DIR__);
-define('DEBUG', true);
-
+// 定义路径常量
+define('BOOT_LOADER_DIR', __DIR__ . '/boot_loader');
+define('SYSTEM_DIR', __DIR__ . '/super');
 // 定义插件目录常量
-define('TUANICP_PLUGIN_DIR', APP_ROOT . '/data/plugins');
-define('TUANICP_TEMPLATE_DIR', APP_ROOT . '/data/templates');
+define('TUANICP_PLUGIN_DIR', __DIR__ . '/data/plugins');
+define('TUANICP_TEMPLATE_DIR', __DIR__ . '/data/templates');
 
-// 定义一天中的秒数
-define('DAY_IN_SECONDS', 86400);
-
-// 定义cookie域
-define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST']);
-
-if(!file_exists(APP_ROOT . '/.env')){
-    header('Location: /install/');
-    exit;
+// 检查是否刚更新完并且是否在10分钟内
+function isRecentlyUpdated() {
+    $updatedFile = 'boot_loader/just_updated';
+    if (file_exists($updatedFile)) {
+        $updateTimestamp = file_get_contents($updatedFile);
+        $currentTime = time();
+        if ($currentTime -$updateTimestamp <= 600) { // 10分钟内
+            return true;
+        } else {
+            // 超过10分钟，删除更新标记文件
+            unlink($updatedFile);
+        }
+    }
+    return false;
 }
-session_start();
-require APP_ROOT . '/lib/globalExceptionHandler.php'; // 全局异常处理，需要在所有文件之前引入
-include APP_ROOT . '/lib/error/error_func.php'; // 错误处理
-include APP_ROOT . '/vendor/autoload.php'; // 加载第三方库
-include APP_ROOT . '/lib/db.php'; // 数据库连接
-include APP_ROOT . '/lib/cache.php'; // 缓存连接
-include APP_ROOT . '/lib/core.php';
 
-do_action('startup'); // 路由前执行，可以用来拦截访问次数过多等
-include APP_ROOT . '/lib/router.php'; // 路由，负责匹配路由、返回对应页面
-//$dbc = initDatabase();
-//$config = get_global_site_config();
-//var_dump($config);
-//do_action('send_mail','admin@biliwind.com', '测试邮件', '测试邮件内容');
-do_action('shutdown');
+// 更新retry文件
+function updateRetryFile($slot) {
+    $retryFile = "boot_loader/retry_{$slot}";
+    $retryCount = file_exists($retryFile) ? file_get_contents($retryFile) : 0;
+    $retryCount++;
+    file_put_contents($retryFile, strval($retryCount));
+}
+
+function getCurrentSlot() {
+    $slotFile = 'boot_loader/slot';
+    $validSlots = ['A', 'B']; // 定义有效的槽位值
+
+    if (!file_exists($slotFile)) {
+        // 文件不存在，创建文件并写入'A'
+        file_put_contents($slotFile, 'A');
+        return 'A';
+    }
+
+    // 读取文件内容
+    $currentSlot = file_get_contents($slotFile);
+
+    // 检查文件内容是否为有效的槽位值
+    if (!in_array($currentSlot,$validSlots)) {
+        // 文件内容无效，删除文件并重新创建
+        unlink($slotFile);
+        file_put_contents($slotFile, 'A');
+        return 'A';
+    } else{
+        return $currentSlot;
+    }
+}
+
+
+
+// 切换槽位
+function switchSlot() {
+    $currentSlot = getCurrentSlot();
+    $newSlot =$currentSlot === 'A' ? 'B' : 'A';
+    file_put_contents('boot_loader/slot', $newSlot);
+}
+
+// 初始化脚本
+function initScript() {
+    // 检查当前槽位
+    $currentSlot = getCurrentSlot();
+    // 定义APP_ROOT
+    define('APP_ROOT', SYSTEM_DIR . "/system_{$currentSlot}");
+    include APP_ROOT . '/index.php';
+}
+
+// 调用初始化脚本
+initScript();
