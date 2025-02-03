@@ -2,3 +2,7 @@
 /super/system_b/.env
 /super/system_a/cache/
 /boot_loader/slot
+/super/system_b/
+/cache/
+/install/install_cache.lock
+/install/tmp_key
