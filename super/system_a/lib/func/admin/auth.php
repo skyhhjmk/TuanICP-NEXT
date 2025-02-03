@@ -27,7 +27,7 @@
  * 最终解释权归风屿团所有开发成员所有。
  */
 
-$dotenv = Dotenv\Dotenv::createImmutable(APP_ROOT);
+$dotenv = Dotenv\Dotenv::createImmutable(DATA_ROOT);
 $dotenv->load();
 $dotenv->required(['COOKIE_KEY']);
 

@@ -39,7 +39,7 @@ define('DAY_IN_SECONDS', 86400);
 // 定义cookie域
 define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST']);
 
-if(!file_exists(APP_ROOT . '/.env')){
+if(!file_exists(DATA_ROOT . '/.env')){
     header('Location: /install/');
     exit;
 }
@@ -51,7 +51,7 @@ include APP_ROOT . '/lib/db.php'; // 数据库连接
 include APP_ROOT . '/lib/cache.php'; // 缓存连接
 include APP_ROOT . '/lib/core.php';
 
-do_action('startup'); // 路由前执行，可以用来拦截访问次数过多等
+do_action1('startup'); // 路由前执行，可以用来拦截访问次数过多等
 include APP_ROOT . '/lib/router.php'; // 路由，负责匹配路由、返回对应页面
 //$dbc = initDatabase();
 //$config = get_global_site_config();

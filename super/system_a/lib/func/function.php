@@ -180,7 +180,7 @@ function getDomainURL(): string
  */
 function get_Url($page, $params = null): string
 {
-    $dotenv = Dotenv\Dotenv::createImmutable(APP_ROOT);
+    $dotenv = Dotenv\Dotenv::createImmutable(DATA_ROOT);
     $dotenv->load();
     $dotenv->required('REWRITE')->notEmpty();
     $Rewrite = $_ENV['REWRITE'] ?? false;

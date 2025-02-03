@@ -16,7 +16,7 @@ use Stash\Pool;
  */
 function initCache(): ?Pool
 {
-    $dotenv = Dotenv\Dotenv::createImmutable(APP_ROOT);
+    $dotenv = Dotenv\Dotenv::createImmutable(DATA_ROOT);
     $dotenv->load();
 
     // 检查是否启用了缓存

@@ -13,7 +13,7 @@ add_menu('admin_sidebar', '概览', get_Url('admin'));
 add_menu('admin_sidebar', '插件', 'javascript:');
 add_submenu('admin_sidebar', 'javascript:', '全部插件', get_Url('admin/plugin'));
 
-if (file_exists(APP_ROOT . '/.env')) {
+if (file_exists(DATA_ROOT . '/.env')) {
     load_plugins(); // 加载插件文件
     do_action('load_plugin');
 }

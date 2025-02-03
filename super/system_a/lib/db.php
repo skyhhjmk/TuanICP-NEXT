@@ -11,7 +11,7 @@ use eftec\PdoOne;
  */
 function initDatabase()
 {
-    $dotenv = Dotenv\Dotenv::createImmutable(APP_ROOT);
+    $dotenv = Dotenv\Dotenv::createImmutable(DATA_ROOT);
     $dotenv->load();
 //
 //    $dotenv->required('DB_TYPE')->notEmpty();

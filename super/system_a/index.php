@@ -39,7 +39,7 @@ define('DAY_IN_SECONDS', 86400);
 // 定义cookie域
 define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST']);
 
-if(!file_exists(APP_ROOT . '/.env')){
+if(!file_exists(DATA_ROOT . '/.env')){
     header('Location: /install/');
     exit;
 }

@@ -6,3 +6,6 @@
 /cache/
 /install/install_cache.lock
 /install/tmp_key
+/data/.env
+/boot_loader/update_done
+/boot_loader/just_updated
