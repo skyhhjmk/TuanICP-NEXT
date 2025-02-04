@@ -9,3 +9,4 @@
 /data/.env
 /boot_loader/update_done
 /boot_loader/just_updated
+/data/cache/

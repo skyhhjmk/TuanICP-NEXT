@@ -14,7 +14,7 @@
         };
 
         function validateForm() {
-            var websiteUrl = document.getElementById("website_url").value;
+            var websiteUrl = document.getElementById("site_domain").value;
             var urlPattern = /^?([\da-z\.-]+)\.([a-z\.]{2,6})/;
             if (!urlPattern.test(websiteUrl)) {
                 alert("网址格式不正确，请输入正确的网址格式，如：example.com 或 example.com");
@@ -31,14 +31,14 @@
     </div>
     <div class="reg-box">
         <form id="regForm" action="{{ url.reg }}" method="post">
-            <input type="text" name="website_name" class="input" placeholder="网站名称(必填)" required><br>
-            <input type="text" id="website_url" name="website_url" class="input" placeholder="网站域名(必填)" required>
+            <input type="text" name="site_name" class="input" placeholder="网站名称(必填)" required><br>
+            <input type="text" id="site_domain" name="site_domain" class="input" placeholder="网站域名(必填)" required>
             <p>不要填写http(s)协议头!</p>
-            <input type="text" name="website_info" class="input" placeholder="网站描述(必填)" rows="4" required><br>
+            <input type="text" name="site_desc" class="input" placeholder="网站描述(必填)" rows="4" required><br>
             <input type="text" name="icp_number" class="input hidden" placeholder="备案号"
                    value="{{ user.icp_number }}" required readonly>
-            <input type="text" name="update_time" class="input hidden" placeholder="时间"
-                   value="{{ current_time }}" required readonly>
+            <input type="text" name="current_time" class="input hidden" placeholder="时间"
+                   value="{{ user.current_time }}" required readonly>
             <input type="text" name="owner" class="input" placeholder="所有者(必填)" required><br>
             <input type="email" name="email" class="input" placeholder="邮箱(必填)" required><br>
             <input type="text" name="qq" class="input" placeholder="QQ(必填)">
@@ -53,6 +53,8 @@
         提交申请后，会在{{ global.audit_duration }}个休息日审核<br>
         若超过7天仍未回复，请联系{{ global.site_name }}ICP备案中心<br>
         邮箱：{{ global.admin_email }}</p>
+    <br>
+    <br>
 </div>
 <div class="footer">
     {{ footer_code_raw }}

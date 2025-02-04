@@ -57,7 +57,7 @@ function id_add_page_vars($page_vars)
         'user_website_name' => $icp_common_icp_record['website_name'],
         'owner' => $icp_common_icp_record['owner'],
         'status' => $icp_common_icp_record['STATUS'],
-        'user_website_info' => $icp_common_icp_record['website_info'],
+        'user_site_desc' => $icp_common_icp_record['site_desc'],
         'update_time' => $icp_common_icp_record['update_time'],
     ];
 

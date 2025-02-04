@@ -41,7 +41,7 @@ function initCache(): ?Pool
             }
             break;
         case 'file':
-            $path = APP_ROOT . '/cache';
+            $path = DATA_ROOT . '/cache';
             $driver = new FileSystem(['path' => $path]);
             break;
         case 'memcache':

@@ -4,10 +4,10 @@ function globalExceptionHandler($exception)
 {
 
 // 初始化缓存池
-    $cachePool = initCache();
+//    $cachePool = initCache();
 
 // 清空整个缓存池
-    $cachePool->clear();
+//    $cachePool->clear();
 
     // 获取异常的详细信息
     $message = $exception->getMessage();
@@ -156,7 +156,7 @@ function globalExceptionHandler($exception)
     <body>
     <div class="container">
         <div class="error-title">哎呀，出错了！</div>
-        <div class="error-message">我们遇到了一些问题，请稍后再试。</div>
+        <div class="error-message">我们遇到了一些问题，请稍后再试。<?php if (file_exists(BOOT_LOADER_DIR . '/just_updated')) { echo '这很可能是由于系统更新导致的问题，请不要担心，请刷新，如果错误依旧，我们会开始回滚本次更新。';}?></div>
         <?php
         if (DEBUG === true): ?>
             <div class="solution">可能的原因: <?php

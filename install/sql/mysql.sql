@@ -13,9 +13,9 @@ CREATE TABLE users
     created_at DATETIME                               DEFAULT NOW()
 ) ENGINE = InnoDB;
 
-INSERT INTO users (user_id, username, email, password, role,status)
-VALUES (0, 'guest', 'guest', 'guest','guest','inactive'),
-       (null, 'admin', 'admin@example.com', 'admin','super_admin','active');
+INSERT INTO users (user_id, username, email, password, role, status)
+VALUES (1, 'guest', 'guest', 'guest', 'guest', 'inactive'),
+       (2, 'admin', 'admin@example.com', 'admin', 'super_admin', 'active');
 
 CREATE TABLE user_meta
 (
@@ -32,7 +32,7 @@ CREATE TABLE sites
     site_id         INT AUTO_INCREMENT PRIMARY KEY,
     user_id         INT          NOT NULL,
     site_name       VARCHAR(255) NOT NULL,
-    site_domain        VARCHAR(255) NOT NULL,
+    site_domain     VARCHAR(255) NOT NULL,
     site_icp_number VARCHAR(255) NOT NULL UNIQUE,
     site_desc       TEXT,
     site_avatar_url VARCHAR(255),
@@ -72,13 +72,14 @@ CREATE TABLE config
 ) ENGINE = InnoDB;
 
 -- 创建计划任务表
-CREATE TABLE `cron_jobs` (
-                             `id` int NOT NULL AUTO_INCREMENT,
-                             `hook` varchar(255) NOT NULL,
-                             `schedule` varchar(255) DEFAULT NULL,
-                             `args` text,
-                             `next_run` datetime DEFAULT NULL,
-                             `last_run` datetime DEFAULT NULL,
-                             `status` tinyint(1) DEFAULT '0', -- 0: 禁用, 1: 启用
-                             PRIMARY KEY (`id`)
+CREATE TABLE `cron_jobs`
+(
+    `id`       int          NOT NULL AUTO_INCREMENT,
+    `hook`     varchar(255) NOT NULL,
+    `schedule` varchar(255) DEFAULT NULL,
+    `args`     text,
+    `next_run` datetime     DEFAULT NULL,
+    `last_run` datetime     DEFAULT NULL,
+    `status`   tinyint(1)   DEFAULT '0', -- 0: 禁用, 1: 启用
+    PRIMARY KEY (`id`)
 );

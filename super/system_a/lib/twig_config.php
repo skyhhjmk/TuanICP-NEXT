@@ -38,7 +38,7 @@ function initTwig(): Environment
     $loader->addPath(TUANICP_TEMPLATE_DIR . '/' . TEMPLATE_NAME . '/admin', 'admin');
     $loader->addPath(TUANICP_PLUGIN_DIR . '/', 'plugin_root');
     $twig = new Environment($loader, [
-        'cache' => APP_ROOT . '/cache', // 设置缓存目录
+        'cache' => DATA_ROOT . '/cache', // 设置缓存目录
         'debug' => DEBUG, // 开启调试模式
         'auto_reload' => true, // 当模板文件发生变化时自动重新加载
         'strict_variables' => false, // 当变量不存在时抛出异常

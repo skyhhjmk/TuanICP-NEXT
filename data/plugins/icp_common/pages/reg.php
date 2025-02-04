@@ -31,13 +31,43 @@ if (!defined('APP_ROOT')) {
 }
 define('REG_PLUGIN_ROOT', __DIR__);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-    // TODO: 判断提交的备案号是否存在，不存在则插入数据
-    $icp_number = $_POST['icp_number'] ?? '';
-    if ($icp_number){
-        $dbc = initDatabase();
-        $stmt = $dbc->prepare("INSERT INTO sites (site_icp_number) VALUES (:icp_number)");
-        $stmt->execute([':icp_number' => $icp_number]);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $icp_number = $_POST['icp_number'] ?? null;
+    $site_name = $_POST['site_name'] ?? null;
+    $site_domain = $_POST['site_domain'] ?? null;
+    $site_desc = $_POST['site_desc'] ?? null;
+    $owner = $_POST['owner'] ?? null;
+    $email = $_POST['email'] ?? null;
+    $qq = $_POST['qq'] ?? null;
+    $security_code = $_POST['security_code'] ?? null;
+    if (!empty($icp_number) && !empty($site_name)
+        && !empty($site_domain) && !empty($site_desc)
+        && !empty($owner) && !empty($email)
+        && !empty($qq) && !empty($security_code)) {
+        $site_config = [
+            'owner' => $owner,
+            'email' => $email,
+            'qq' => $qq,
+            'security_code_hash' => password_hash($security_code, PASSWORD_DEFAULT),
+        ];
+        $serialize_site_config = serialize($site_config); // 序列化数据
+
+        try {
+            $dbc = initDatabase();
+            $stmt = $dbc->prepare("INSERT INTO sites 
+    (user_id,site_name,site_domain,site_icp_number,site_desc,site_config) 
+VALUES (0,:site_name, :site_domain,:icp_number, :site_desc, :site_config)");
+            $stmt->execute([
+                ':icp_number' => $icp_number,
+                ':site_name' => $site_name,
+                ':site_domain' => $site_domain,
+                ':site_desc' => $site_desc,
+                'site_config' => $serialize_site_config,
+            ]);
+        } catch (PDOException $e) {
+            $reg_error_msg = $e->getMessage();
+        }
+
     }
     exit;
 }
@@ -59,6 +89,7 @@ function reg_add_page_vars($page_vars)
 
     return $page_vars;
 }
-add_filter('page_vars', 'reg_add_page_vars',10,1);
+
+add_filter('page_vars', 'reg_add_page_vars', 10, 1);
 $twig = initTwig();
 echo $twig->render('@index/reg.html.twig', get_Page_vars());

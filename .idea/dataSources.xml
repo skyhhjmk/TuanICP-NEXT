@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="icpn@localhost" uuid="2b35e9d2-ac7d-4ccc-80db-bde18d35be3a">
+    <data-source source="LOCAL" name="@localhost" uuid="2b35e9d2-ac7d-4ccc-80db-bde18d35be3a">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/icpn</jdbc-url>
+      <jdbc-url>jdbc:mysql://localhost:3306/</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
     <data-source source="LOCAL" name="0@localhost" uuid="55fd57c5-e497-49d0-9ad6-396fdf0c6fe6">

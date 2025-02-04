@@ -32,14 +32,13 @@ if (!defined('APP_ROOT')) {
 }
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 // 获取所有插件
-    $all_plugins = get_all_plugins();
+    $get_all_plugins = get_all_plugins();
 
 // 创建统一的JSON输出格式
     $output = [
         'code' => 0,
         'msg' => '',
-        "count" => count($all_plugins),
-        "data" => []
+//        "count" => count($get_all_plugins),
     ];
 
 // 输出数组内容为JSON格式
@@ -57,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $output['count'] = count($output['data']);
     } else {
         // 执行分页函数
-        $output['data'] = get($page, $limit);
+        $output['data'] = get($get_all_plugins,$page, $limit);
     }
     echo json_encode($output);
     exit;
@@ -69,8 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 function search($plugin_name, $page, $limit): array
 {
-    global $all_plugins;
-    $filtered_plugins = array_filter($all_plugins, function ($plugin) use ($plugin_name) {
+    $filtered_plugins = array_filter($get_all_plugins, function ($plugin) use ($plugin_name) {
         return stripos($plugin['plugin_name'], $plugin_name) !== false;
     });
 
@@ -78,9 +76,9 @@ function search($plugin_name, $page, $limit): array
     return array_slice($filtered_plugins, $offset, $limit);
 }
 
-function get($page, $limit): array
+function get($get_all_plugins,$page, $limit): array
 {
-    global $all_plugins;
+//    var_dump($get_all_plugins);
     $offset = ($page - 1) * $limit;
-    return array_slice($all_plugins, $offset, $limit);
+    return array_slice($get_all_plugins, $offset, $limit);
 }

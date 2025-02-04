@@ -80,16 +80,17 @@ foreach ($remotePlugins as &$plugin) {
     }
 }
 
+global $add_twigVariables;
 // Twig模板引擎变量赋值
-$twigVariables = [
+$add_twigVariables = [
     'plugins' => $remotePlugins
 ];
 
-global $twigVariables;
+
 
 function app_store_page_vars($routes) {
-    global $twigVariables;
-    $routes = array_merge($routes, $twigVariables); // 合并两个数组
+    global $add_twigVariables;
+    $routes = array_merge($routes, $add_twigVariables); // 合并两个数组
     return $routes;
 }
 

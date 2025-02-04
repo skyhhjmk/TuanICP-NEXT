@@ -27,13 +27,8 @@
  * 最终解释权归风屿团所有开发成员所有。
  */
 
-define('APP_ROOT', __DIR__);
 define('IS_CRON', true);
 define('DEBUG', true);
-
-// 定义插件目录常量
-define('TUANICP_PLUGIN_DIR', APP_ROOT . '/data/plugins');
-define('TUANICP_TEMPLATE_DIR', APP_ROOT . '/data/templates');
 
 // 定义一天中的秒数
 define('DAY_IN_SECONDS', 86400);
@@ -45,6 +40,7 @@ if(!file_exists(DATA_ROOT . '/.env')){
     header('Location: /install/');
     exit;
 }
+
 session_start();
 require APP_ROOT . '/lib/globalExceptionHandler.php'; // 全局异常处理，需要在所有文件之前引入
 include APP_ROOT . '/lib/error/error_func.php'; // 错误处理
