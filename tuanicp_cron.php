@@ -28,11 +28,17 @@
  */
 
 define('DEBUG', true);
+
+// 定义一天中的秒数
+define('DAY_IN_SECONDS', 86400);
+
+// 定义cookie域
+define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST']);
 // 定义路径常量
 define('BOOT_LOADER_DIR', __DIR__ . '/boot_loader');
 define('SYSTEM_DIR', __DIR__ . '/super');
 define('DATA_ROOT', __DIR__ . '/data');
-define('ROOT', __DIR__);
+define('IS_CRON', true);
 // 定义插件目录常量
 define('TUANICP_PLUGIN_DIR', DATA_ROOT . '/plugins');
 define('TUANICP_TEMPLATE_DIR', DATA_ROOT . '/templates');
@@ -54,6 +60,7 @@ function isRecentlyUpdated()
     }
     return false;
 }
+
 
 // 更新retry文件
 function updateRetryFile($slot)
@@ -89,11 +96,9 @@ function getCurrentSlot()
     }
 }
 
+
 // 切换槽位
-/**
- * @return void
- */
-function switchSlot(): void
+function switchSlot()
 {
     $currentSlot = getCurrentSlot();
     $newSlot = $currentSlot === 'A' ? 'B' : 'A';
@@ -101,10 +106,7 @@ function switchSlot(): void
 }
 
 // 初始化脚本
-/**
- * @return void
- */
-function initScript(): void
+function initScript()
 {
     if (file_exists('boot_loader/update_done')) {
         unlink('boot_loader/update_done');
@@ -116,7 +118,7 @@ function initScript(): void
     $currentSlot = getCurrentSlot();
     // 定义APP_ROOT
     define('APP_ROOT', SYSTEM_DIR . "/system_{$currentSlot}");
-    include APP_ROOT . '/index.php';
+    include APP_ROOT . '/tuanicp_cron.php';
 }
 
 // 调用初始化脚本

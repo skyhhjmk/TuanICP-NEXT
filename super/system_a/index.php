@@ -31,13 +31,6 @@ if (!defined('APP_ROOT')) {
     exit('Direct access is not allowed.');
 }
 
-define('DEBUG', true);
-
-// 定义一天中的秒数
-define('DAY_IN_SECONDS', 86400);
-
-// 定义cookie域
-define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST']);
 
 if(!file_exists(DATA_ROOT . '/.env')){
     header('Location: /install/');
@@ -53,8 +46,4 @@ include APP_ROOT . '/lib/core.php';
 
 do_action('startup'); // 路由前执行，可以用来拦截访问次数过多等
 include APP_ROOT . '/lib/router.php'; // 路由，负责匹配路由、返回对应页面
-//$dbc = initDatabase();
-//$config = get_global_site_config();
-//var_dump($config);
-//do_action('send_mail','admin@biliwind.com', '测试邮件', '测试邮件内容');
 do_action('shutdown');

@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $dbc = initDatabase();
             $stmt = $dbc->prepare("INSERT INTO sites 
     (user_id,site_name,site_domain,site_icp_number,site_desc,site_config) 
-VALUES (0,:site_name, :site_domain,:icp_number, :site_desc, :site_config)");
+VALUES (1,:site_name, :site_domain,:icp_number, :site_desc, :site_config)");
             $stmt->execute([
                 ':icp_number' => $icp_number,
                 ':site_name' => $site_name,
@@ -66,9 +66,12 @@ VALUES (0,:site_name, :site_domain,:icp_number, :site_desc, :site_config)");
             ]);
         } catch (PDOException $e) {
             $reg_error_msg = $e->getMessage();
+            echo $reg_error_msg;
+            exit;
         }
 
     }
+    header('Location: /id?keyword=' . $icp_number);
     exit;
 }
 
