@@ -31,6 +31,8 @@ if (!$icp_record) {
     exit;
 }
 
+$site_config = unserialize($icp_record['site_config']);
+
 global $icp_common_icp_record;
 
 switch ($icp_record['status']) {
@@ -42,6 +44,7 @@ switch ($icp_record['status']) {
             'site_name' => '******',
             'site_desc' => '******',
             'site_avatar_url' => '******',
+            'owner' => '******',
             'site_icp_number' => $icp_record['site_icp_number'],
             'created_at' => $icp_record['created_at'],
         ];
@@ -49,6 +52,7 @@ switch ($icp_record['status']) {
     case 'approved':
         $status_msg = "该备案信息已经通过审核，请正确悬挂信息。";
         $icp_common_icp_record = $icp_record;
+        $icp_common_icp_record['owner'] = $site_config['owner'];
         break;
     case 'rejected':
         $icp_common_icp_record = [
@@ -56,6 +60,7 @@ switch ($icp_record['status']) {
             'site_name' => '******',
             'site_desc' => '******',
             'site_avatar_url' => '******',
+            'owner' => '******',
             'site_icp_number' => $icp_record['site_icp_number'],
             'created_at' => $icp_record['created_at'],
         ];
@@ -67,6 +72,7 @@ switch ($icp_record['status']) {
             'site_name' => '******',
             'site_desc' => '******',
             'site_avatar_url' => '******',
+            'owner' => '******',
             'site_icp_number' => $icp_record['site_icp_number'],
             'created_at' => $icp_record['created_at'],
         ];
