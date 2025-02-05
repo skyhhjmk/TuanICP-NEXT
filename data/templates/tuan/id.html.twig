@@ -34,10 +34,15 @@
         <div class="row">
             <div class="cell header-cell">网站域名</div>
             <div class="cell">
-                <a style="color:#b62df0; text-decoration:none; text-shadow: 1px 1px 1px black;"
-                   href="//{{ user.site_domain }}" target="_blank">
-                    {{ user.site_domain }}
-                </a>
+                {% if user.site_domain != '******' %}
+                    <a style="color:#b62df0; text-decoration:none; text-shadow: 1px 1px 1px black;"
+                       href="//{{ user.site_domain }}" target="_blank">
+                        {{ user.site_domain }}
+                    </a>
+                {% else %}
+                    <span>{{ user.site_domain }}</span>
+                {% endif %}
+
             </div>
         </div>
         <div class="row">
