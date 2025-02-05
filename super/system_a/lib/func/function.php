@@ -244,7 +244,7 @@ function get_Page_vars(array $additionalVars = []): ?array
             ],
         ],
         'menu' => [
-            'footer' => get_menus('footer'),
+            'footer' => get_menus_html('footer','footer'),
         ]
     ];
 

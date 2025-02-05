@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BladeDebugConfiguration">
+    <cachePath />
+  </component>
+  <component name="LaravelPint">
+    <laravel_pint_settings>
+      <laravel_pint_by_interpreter asDefaultInterpreter="true" interpreter_id="c9db6bfe-b140-44be-bb3a-f5e886750c77">
+        <option name="timeout" value="30000" />
+      </laravel_pint_by_interpreter>
+    </laravel_pint_settings>
+  </component>
+  <component name="MessDetector">
+    <phpmd_settings>
+      <phpmd_by_interpreter asDefaultInterpreter="true" interpreter_id="c9db6bfe-b140-44be-bb3a-f5e886750c77" timeout="30000" />
+    </phpmd_settings>
+  </component>
   <component name="MessDetectorOptionsConfiguration">
     <option name="transferred" value="true" />
   </component>
@@ -10,9 +25,14 @@
     <option name="highlightLevel" value="WARNING" />
     <option name="transferred" value="true" />
   </component>
+  <component name="PhpCSFixer">
+    <phpcsfixer_settings>
+      <phpcs_fixer_by_interpreter asDefaultInterpreter="true" interpreter_id="c9db6bfe-b140-44be-bb3a-f5e886750c77" timeout="30000" />
+    </phpcsfixer_settings>
+  </component>
   <component name="PhpCodeSniffer">
     <phpcs_settings>
-      <phpcs_by_interpreter asDefaultInterpreter="true" interpreter_id="be173936-4077-41ab-8cb6-7c5a33a5b418" timeout="30000" />
+      <phpcs_by_interpreter asDefaultInterpreter="true" interpreter_id="c9db6bfe-b140-44be-bb3a-f5e886750c77" timeout="30000" />
     </phpcs_settings>
   </component>
   <component name="PhpIncludePathManager">
@@ -29,8 +49,6 @@
       <path value="$PROJECT_DIR$/vendor/twig/twig" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php81" />
       <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
-      <path value="$PROJECT_DIR$/data/plugins/mailer/vendor/composer" />
-      <path value="$PROJECT_DIR$/data/plugins/mailer/vendor/phpmailer/phpmailer" />
       <path value="$PROJECT_DIR$/system/data/plugins/mailer/vendor/composer" />
       <path value="$PROJECT_DIR$/system/data/plugins/mailer/vendor/phpmailer/phpmailer" />
       <path value="$PROJECT_DIR$/super/system_a/vendor/symfony/polyfill-ctype" />
@@ -52,7 +70,7 @@
   </component>
   <component name="PhpStan">
     <PhpStan_settings>
-      <phpstan_by_interpreter asDefaultInterpreter="true" interpreter_id="be173936-4077-41ab-8cb6-7c5a33a5b418" timeout="60000" />
+      <phpstan_by_interpreter asDefaultInterpreter="true" interpreter_id="c9db6bfe-b140-44be-bb3a-f5e886750c77" timeout="60000" />
     </PhpStan_settings>
   </component>
   <component name="PhpStanOptionsConfiguration">
@@ -60,15 +78,18 @@
   </component>
   <component name="PhpUnit">
     <phpunit_settings>
-      <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/vendor/autoload.php" />
+      <PhpUnitSettings load_method="PHPUNIT_PHAR" custom_loader_path="$PROJECT_DIR$/vendor/autoload.php" phpunit_phar_path="$PROJECT_DIR$/../aaa/phpunit.phar" />
     </phpunit_settings>
   </component>
   <component name="Psalm">
     <Psalm_settings>
-      <psalm_fixer_by_interpreter asDefaultInterpreter="true" interpreter_id="be173936-4077-41ab-8cb6-7c5a33a5b418" timeout="60000" />
+      <psalm_fixer_by_interpreter asDefaultInterpreter="true" interpreter_id="c9db6bfe-b140-44be-bb3a-f5e886750c77" timeout="60000" />
     </Psalm_settings>
   </component>
   <component name="PsalmOptionsConfiguration">
     <option name="transferred" value="true" />
+  </component>
+  <component name="TwigDebugConfiguration">
+    <cachePath>$PROJECT_DIR$/data/cache</cachePath>
   </component>
 </project>

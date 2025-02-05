@@ -3,7 +3,7 @@
   <component name="PHPUnit">
     <option name="directories">
       <list>
-        <option value="$PROJECT_DIR$/super/system_a/vendor/tedivm/stash/tests/Stash" />
+        <option value="D:\Codes\TuanICP-Next\tests" />
       </list>
     </option>
   </component>

@@ -42,3 +42,57 @@ function get_menus($menu_id = null)
     }
     return $menu_items;
 }
+
+function get_menus_html($menu_id = null, $menu_style = null)
+{
+    global $menu_items;
+    $html = '';
+
+    if ($menu_id !== null) {
+        $menus = get_menus($menu_id);
+        if ($menus !== null) {
+            switch ($menu_style) {
+                case 'footer':
+                    foreach ($menus as $menu) {
+                        $html .= '<a href="' . htmlspecialchars($menu['slug']) . '">' . htmlspecialchars($menu['name']) . '</a> ';
+                        if (!empty($menu['children'])) {
+                            foreach ($menu['children'] as $child) {
+                                $html .= '<a href="' . htmlspecialchars($child['slug']) . '">' . htmlspecialchars($child['name']) . '</a> ';
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    foreach ($menus as $menu) {
+                        $html .= '<a href="' . htmlspecialchars($menu['slug']) . '">' . htmlspecialchars($menu['name']) . '</a> ';
+                    }
+                    break;
+            }
+        }
+    } else {
+        $menus = get_menus();
+        switch ($menu_style) {
+            case 'footer':
+                foreach ($menus as $menu) {
+                    foreach ($menu as $item) {
+                        $html .= '<a href="' . htmlspecialchars($item['slug']) . '">' . htmlspecialchars($item['name']) . '</a> ';
+                        if (!empty($item['children'])) {
+                            foreach ($item['children'] as $child) {
+                                $html .= '<a href="' . htmlspecialchars($child['slug']) . '">' . htmlspecialchars($child['name']) . '</a> ';
+                            }
+                        }
+                    }
+                }
+                break;
+            default:
+                foreach ($menus as $menu) {
+                    foreach ($menu as $item) {
+                        $html .= '<a href="' . htmlspecialchars($item['slug']) . '">' . htmlspecialchars($item['name']) . '</a> ';
+                    }
+                }
+                break;
+        }
+    }
+
+    return $html;
+}

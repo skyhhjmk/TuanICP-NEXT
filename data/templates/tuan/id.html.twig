@@ -63,11 +63,19 @@
             <div class="cell header-cell">加入时间</div>
             <div class="cell">{{ user.created_at }}</div>
         </div>
-        <div class="row">
-            <div class="cell header-cell">状态</div>
-            <div class="cell">{{ user.site_status }}<a
-                        href="{{ global.feedback_link }}" class="fk">&nbsp;&nbsp;反馈</a></div>
-        </div>
+        {% if user.site_domain != '******' %}
+            <div class="row">
+                <div class="cell header-cell">状态</div>
+                <div class="cell">{{ user.site_status }}<a
+                            href="{{ global.feedback_link }}" class="fk">&nbsp;&nbsp;反馈</a></div>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="cell header-cell">悬挂代码</div>
+                <div class="cell">{{ user.site_status }}<a
+                            href="{{ global.feedback_link }}" class="fk">&nbsp;&nbsp;反馈</a></div>
+            </div>
+        {% endif %}
     </div>
     <br>
 </div>
