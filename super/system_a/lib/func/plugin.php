@@ -208,20 +208,30 @@ function get_active_plugins(): array
 }
 
 
-function activate_plugin($plugin_name, $plugin_file)
-{
-    // 初始化缓存池，如果缓存被禁用，则 $cachePool 为 null
+function is_plugin_active_by_name($plugin_name) {
+    $activePlugins = get_active_plugins();
+    foreach ($activePlugins as$plugin) {
+        if ($plugin->name ==$plugin_name) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function activate_plugin($plugin_name,$plugin_file) {
+    // 初始化缓存池
     $cachePool = initCache();
 
-    // 定义要清除的缓存项的键
+    // 定义缓存项的键
     $cacheKey = 'active_plugins';
 
-    // 检查缓存池是否不为 null
+    // 如果缓存池不为 null，尝试清除缓存项
     if ($cachePool !== null) {
-        // 从缓存池中获取缓存项
-        $item = $cachePool->getItem($cacheKey);
+        // 创建一个缓存项
+        $item =$cachePool->getItem($cacheKey);
+
         // 清除缓存项
-        $cachePool->deleteItem($cacheKey);
+        $cachePool->clear($cacheKey);
     }
 
     $pdo = initDatabase();
@@ -229,8 +239,8 @@ function activate_plugin($plugin_name, $plugin_file)
     $activePlugins = get_active_plugins();
 
     // 检查是否有相同的插件名或入口文件
-    foreach ($activePlugins as $plugin) {
-        if ($plugin->name == $plugin_name || $plugin->file == $plugin_file) {
+    foreach ($activePlugins as$plugin) {
+        if ($plugin->name ==$plugin_name || $plugin->file ==$plugin_file) {
             // 如果存在相同的插件名或入口文件，返回失败
             return false;
         }
@@ -238,40 +248,40 @@ function activate_plugin($plugin_name, $plugin_file)
 
     // 获取插件信息
     $plugin_info = get_plugin_info($plugin_file);
+
+    if (isset($plugin_info['dependencies'])) {
+        $dependencies = array_map('trim', explode(',',$plugin_info['dependencies']));
+        foreach ($dependencies as$dependency) {
+            if (!is_plugin_active_by_name($dependency)) {
+                // 如果依赖的插件未激活，返回失败
+                return false;
+            }
+        }
+    }
+
+    // 检查插件冲突
     if (isset($plugin_info['conflicts'])) {
-        $conflicts = explode(',', $plugin_info['conflicts']);
-        foreach ($conflicts as $conflict) {
-            $conflict = trim($conflict);
-            if (is_plugin_active($conflict)) {
+        $conflicts = array_map('trim', explode(',',$plugin_info['conflicts']));
+        foreach ($conflicts as$conflict) {
+            if (is_plugin_active_by_name($conflict)) {
                 // 如果存在冲突的插件已激活，返回失败
                 return false;
             }
         }
     }
 
-    if (isset($plugin_info['dependencies'])) {
-        $dependencies = explode(',', $plugin_info['dependencies']);
-        foreach ($dependencies as $dependency) {
-            $dependency = trim($dependency);
-            if (!is_plugin_active($dependency)) {
-                // 如果存在依赖的插件未激活，返回失败
-                return false;
-            }
-        }
-    }
-
     // 添加新插件到数组，存储为对象
-    $activePlugins[] = (object)['name' => $plugin_name, 'file' => $plugin_file];
+    $activePlugins[] = (object)['name' =>$plugin_name, 'file' => $plugin_file];
 
     // 序列化插件信息数组
     $serialized_plugin_info = serialize($activePlugins);
 
     // 准备SQL语句
     $sql = "INSERT INTO config (`k`, `v`) VALUES ('active_plugins', :v) ON DUPLICATE KEY UPDATE `v` = :v";
-    $stmt = $pdo->prepare($sql);
+    $stmt =$pdo->prepare($sql);
 
     // 绑定参数
-    $stmt->bindParam(':v', $serialized_plugin_info);
+    $stmt->bindParam(':v',$serialized_plugin_info);
 
     // 执行语句
     $stmt->execute();
@@ -280,21 +290,24 @@ function activate_plugin($plugin_name, $plugin_file)
     return true;
 }
 
+
 function deactivate_plugin($plugin_name, $plugin_file)
 {
-    // 初始化缓存池，如果缓存被禁用，则 $cachePool 为 null
+    // 初始化缓存池
     $cachePool = initCache();
 
-    // 定义要清除的缓存项的键
+// 定义缓存项的键
     $cacheKey = 'active_plugins';
 
-    // 检查缓存池是否不为 null
+// 如果缓存池不为 null，尝试清除缓存项
     if ($cachePool !== null) {
-        // 从缓存池中获取缓存项
+        // 创建一个缓存项
         $item = $cachePool->getItem($cacheKey);
+
         // 清除缓存项
-        $cachePool->deleteItem($cacheKey);
+        $cachePool->clear($cacheKey);
     }
+
     $pdo = initDatabase();
     // 获取当前所有启用的插件
     $activePlugins = get_active_plugins();
