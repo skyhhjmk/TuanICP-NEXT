@@ -212,6 +212,7 @@ function get_Page_vars(array $additionalVars = []): ?array
             'site_name' => get_Config('site_name', '云团子', true),
             'site_url' => get_Config('site_url', 'https://icp.yuncheng.fun/', true),
             'site_avatar' => get_Config('site_avatar', 'https://www.yuncheng.fun/static/webAvatar/11727945933180571.png', true),
+            'site_abbr' => get_Config('site_abbr', '团', true),
             'site_description' => get_Config('site_description', '哇，是谁家的小可爱？', true),
             'site_keywords' => get_Config('site_keywords', '团备, 团ICP备, 云团子ICP备案中心 ,云团子 ,杜匀程', true),
             'admin_nickname' => get_Config('admin_nickname', '云团子', true),

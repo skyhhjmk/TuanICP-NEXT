@@ -19,5 +19,7 @@ add_menu('footer', '关于', get_Url('about'));
 
 if (file_exists(DATA_ROOT . '/.env')) {
     load_plugins(); // 加载插件文件
+    // 同时执行两个初始化钩子防止钩子名写错导致无法初始化
     do_action('load_plugin');
+    do_action('load_plugins');
 }
