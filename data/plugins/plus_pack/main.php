@@ -18,6 +18,9 @@ function initPlusPack()
     add_submenu('admin_sidebar', 'javascript:', '站点设置', get_Url('admin/settings'));
     add_submenu('admin_sidebar', 'javascript:', '用户管理', get_Url('admin/users'));
     add_menu('admin_sidebar', '主题',get_Url('admin/settings'));
+    add_menu('admin_sidebar', '备案管理','javascript:');
+    add_submenu('admin_sidebar', 'javascript:', '全部备案', get_Url('admin/all_icp'));
+    add_submenu('admin_sidebar', 'javascript:', '审核管理', get_Url('admin/audit'));
 
 
 }
@@ -50,3 +53,5 @@ function register_plus_pack_routes($routes)
 
 // 使用 'page_router' 过滤器钩子添加自定义路由
 add_filter('page_router', 'register_plus_pack_routes');
+
+add_menu('footer', '加入我们',get_Url('join'));

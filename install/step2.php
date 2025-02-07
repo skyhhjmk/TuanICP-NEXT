@@ -1,7 +1,9 @@
 <?php
-if (file_exists('install.lock')){
+define('INSTALL_ROOT', __DIR__);
+
+if(file_exists(INSTALL_ROOT . '/../data/.env')){
     header('Location: /');
-    exit();
+    exit;
 }
 // 检查是否有POST请求，并尝试连接数据库
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -22,11 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // 设置错误模式为异常
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 // 连接成功，将信息写入.env文件
-                if (file_exists('../super/system_a/.env')) {
+                if (file_exists('../data/.env')) {
                     $info_msg = "<p class='failure'>.env文件已存在。</p>";
                     break;
                 }
-                file_put_contents('../super/system_a/.env', "DB_TYPE=mysql\nDB_HOST={$host}\nDB_NAME={$dbName}\nDB_USER={$username}\nDB_PASS={$password}\n", FILE_APPEND);
+                file_put_contents('../data/.env', "DB_TYPE=mysql\nDB_HOST={$host}\nDB_NAME={$dbName}\nDB_USER={$username}\nDB_PASS={$password}\n", FILE_APPEND);
                 $info_msg = "<p class='success'>数据库连接成功！信息已写入.env文件。</p>";
                 $info_msg .= "<p>正在创建数据库表...</p>";
                 // 获取数据库中所有表的列表
@@ -61,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
 
                     $info_msg .= "</ul>";
-                    unlink('../super/system_a/.env');
+                    unlink('../data/.env');
                 }
                 break;
             default:

@@ -15,9 +15,9 @@
 
         function validateForm() {
             var websiteUrl = document.getElementById("site_domain").value;
-            var urlPattern = /^?([\da-z\.-]+)\.([a-z\.]{2,6})/;
+              var urlPattern = /^([\da-z\.-]+)\.([a-z]{2,6})$/i;
             if (!urlPattern.test(websiteUrl)) {
-                alert("网址格式不正确，请输入正确的网址格式，如：example.com 或 example.com");
+                alert("网址格式不正确，请输入正确的网址格式，如：example.com 或 www.example.com");
                 return false;
             }
             return true;

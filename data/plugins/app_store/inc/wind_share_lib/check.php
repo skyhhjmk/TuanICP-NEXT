@@ -26,32 +26,3 @@
  * 若使用本软件且在未经许可的情况下进行商业活动，我们有权追回您进行商业活动的所得资产（仅使用本软件产生的资产）并要求您支付相应的商业授权和赔偿费用或要求您停止商业行为。
  * 最终解释权归风屿团所有开发成员所有。
  */
-
-/**
- * 检查指定的ICP备案号是否存在于数据库中
- *
- * @param string $icp_number 要检查的ICP备案号
- * @return bool 如果ICP备案号存在则返回true，否则返回false
- * @throws JsonException
- */
-function check_icp_exists($icp_number) {
-    $pdo = initDatabase();
-
-    // 准备SQL语句
-    $sql = "SELECT site_icp_number FROM sites WHERE site_icp_number = :icp_number";
-
-    // 准备预处理语句
-    $stmt =$pdo->prepare($sql);
-
-    // 绑定参数
-    $stmt->bindParam(':icp_number',$icp_number, PDO::PARAM_STR);
-
-    // 执行预处理语句
-    $stmt->execute();
-
-    // 检索结果
-    $result =$stmt->fetch(PDO::FETCH_ASSOC);
-
-    // 检查结果是否存在
-    return $result !== false;
-}

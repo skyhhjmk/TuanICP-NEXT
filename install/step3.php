@@ -1,10 +1,8 @@
 <?php
-if (file_exists('install.lock')){
-    header('Location: /');
-    exit();
-}
+define('INSTALL_ROOT', __DIR__);
+
 if (file_exists('install_cache.lock')){
-    header('Location: step4.php');
+    echo '已经安装完成。' . '<a href="/">访问网站</a>';
     exit();
 }
 use Stash\Driver\Apcu;
@@ -106,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // 确定缓存配置成功后，追加配置信息到.env文件
     if ($pool && $info_msg == "<p class='success'> " . $cache_type . "缓存配置成功，安装阶段结束，默认的用户名为admin，密码为admin，请登录后修改密码。</p>") {
-        $envFilePath = __DIR__ . '/../super/system_a/.env';
+        $envFilePath = __DIR__ . '/../data/.env';
         function generateRandomKey($length = 64) {
             return bin2hex(random_bytes($length / 2));
         }

@@ -2,7 +2,7 @@
 
 define('INSTALL_ROOT', __DIR__);
 
-if(file_exists(INSTALL_ROOT . '/../super/system_a/.env')){
+if(file_exists(INSTALL_ROOT . '/../data/.env')){
     header('Location: /');
     exit;
 }

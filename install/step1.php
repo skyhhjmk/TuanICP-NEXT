@@ -1,7 +1,9 @@
 <?php
-if (file_exists('install.lock')){
+define('INSTALL_ROOT', __DIR__);
+
+if(file_exists(INSTALL_ROOT . '/../data/.env')){
     header('Location: /');
-    exit();
+    exit;
 }
 // 定义检查函数
 function check_php_version($required_version)

@@ -27,6 +27,7 @@
  * 最终解释权归风屿团所有开发成员所有。
  */
 
+include 'check.php';
 
 add_menu('admin_sidebar', '设置', 'javascript:');
 

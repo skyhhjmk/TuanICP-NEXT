@@ -1,4 +1,7 @@
 <?php
+if (!defined('APP_ROOT')) {
+    exit('Direct access is not allowed.');
+}
 require_once 'func/function.php';
 require_once 'func/cron.php';
 require_once 'func/action.php';
@@ -6,6 +9,9 @@ require_once 'func/plugin.php';
 require_once 'func/menu.php';
 require_once 'func/sendmail.php';
 require_once 'func/settings_func.php';
+
+// 抑制错误加载，防止没有共享库时报错
+@include 'share_lib/check.php';
 
 // 添加后台管理页面的菜单和子菜单
 add_menu('admin_sidebar', '概览', get_Url('admin'));
