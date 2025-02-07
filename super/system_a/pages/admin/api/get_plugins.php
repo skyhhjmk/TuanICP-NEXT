@@ -30,8 +30,15 @@
 if (!defined('APP_ROOT')) {
     exit('Direct access is not allowed.');
 }
+
+$user_role = get_current_user_role();
+if (!$user_role){
+    header('Location: '. get_Url('admin/login'));
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 // 获取所有插件
+    global $get_all_plugins;
     $get_all_plugins = get_all_plugins();
 
 // 创建统一的JSON输出格式
@@ -68,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 function search($plugin_name, $page, $limit): array
 {
+    global $get_all_plugins;
     $filtered_plugins = array_filter($get_all_plugins, function ($plugin) use ($plugin_name) {
         return stripos($plugin['plugin_name'], $plugin_name) !== false;
     });

@@ -27,9 +27,16 @@
  * 最终解释权归风屿团所有开发成员所有。
  */
 
+
 if (!defined('APP_ROOT')) {
     exit('Direct access is not allowed.');
 }
+
+$user_role = get_current_user_role();
+if (!$user_role){
+    header('Location: '. get_Url('admin/login'));
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? null;
     $plugin_name = $_POST['plugin_name'] ?? null;

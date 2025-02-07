@@ -27,11 +27,6 @@
  * 最终解释权归风屿团所有开发成员所有。
  */
 
-$dotenv = Dotenv\Dotenv::createImmutable(DATA_ROOT);
-$dotenv->load();
-$dotenv->required(['COOKIE_KEY']);
-
-define('COOKIE_KEY', $_ENV['COOKIE_KEY']);
 
 function register($username,$email, $password) {
     $pdo = initDatabase();
@@ -44,13 +39,13 @@ function register($username,$email, $password) {
 
 function login($username,$password, $remember = false) {
     $pdo = initDatabase();
-    $stmt =$pdo->prepare("SELECT * FROM users WHERE username = ?");
+    $stmt =$pdo->prepare("SELECT * FROM users WHERE username = ? AND status = 'active'");
     $stmt->execute([$username]);
     $user =$stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user && password_verify($password, $user['password'])) {
         $expiration =$remember ? time() + 30 * DAY_IN_SECONDS : 0;
-        $cookie = generate_auth_cookie($user['userid'], $expiration);
+        $cookie = generate_auth_cookie($user['user_id'], $expiration);
         setcookie('user_logged_in', $cookie,$expiration, '/', COOKIE_DOMAIN, is_ssl(), true);
         return true;
     }
@@ -71,7 +66,7 @@ function validate_auth_cookie($cookie) {
 
     list($user_id,$expiration, $hmac) =$cookie_elements;
 
-    if ($expiration < time() &&$expiration !== 0) {
+    if ($expiration < time() && $expiration != 0) {
         return false;
     }
 

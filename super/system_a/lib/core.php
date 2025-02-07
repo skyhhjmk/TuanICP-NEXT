@@ -9,6 +9,7 @@ require_once 'func/plugin.php';
 require_once 'func/menu.php';
 require_once 'func/sendmail.php';
 require_once 'func/settings_func.php';
+require_once 'func/admin/auth.php';
 
 // 抑制错误加载，防止没有共享库时报错
 @include 'share_lib/lib.php';
@@ -16,8 +17,8 @@ require_once 'func/settings_func.php';
 // 添加后台管理页面的菜单和子菜单
 add_menu('admin_sidebar', '概览', get_Url('admin'));
 
-add_menu('admin_sidebar', '插件', 'javascript:');
-add_submenu('admin_sidebar', 'javascript:', '全部插件', get_Url('admin/plugin'));
+add_menu('admin_sidebar', '插件', '#plugins');
+add_submenu('admin_sidebar', '#plugins', '全部插件', get_Url('admin/plugin'));
 
 // 添加前台页脚菜单
 add_menu('footer', '首页', get_Url(''));

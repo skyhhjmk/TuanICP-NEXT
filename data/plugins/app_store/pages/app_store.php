@@ -31,6 +31,11 @@ if (!defined('APP_ROOT')) {
     exit('Direct access is not allowed.');
 }
 
+$user_role = get_current_user_role();
+if (!$user_role){
+    header('Location: '. get_Url('admin/login'));
+}
+
 // 定义API URL
 $apiUrl = 'http://icpn.com/app_store_api.php'; // 假设这是插件市场的API URL
 

@@ -9,10 +9,10 @@
 define('APP_STORE_DIR', __DIR__);
 include APP_STORE_DIR . '/inc/wind_share_lib/func.php';
 
-
-add_menu('admin_sidebar', '应用商店', 'javascript:');
-add_submenu('admin_sidebar', 'javascript:', '应用商店',get_Url('admin/app_store'));
-add_submenu('admin_sidebar', 'javascript:', '授权信息配置',get_Url('admin/auth_config'));
+add_menu('admin_sidebar', '设置', '#settings');
+add_menu('admin_sidebar', '应用商店', '#app_store');
+add_submenu('admin_sidebar', '#app_store', '应用商店',get_Url('admin/app_store'));
+add_submenu('admin_sidebar', '#app_store', '授权信息配置',get_Url('admin/auth_config'));
 
 function appstore_add_page_router($page_router)
 {

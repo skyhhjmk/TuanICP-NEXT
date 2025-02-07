@@ -14,8 +14,9 @@ CREATE TABLE users
 ) ENGINE = InnoDB;
 
 INSERT INTO users (user_id, username, email, password, role, status)
-VALUES (1, 'guest', 'guest', 'guest', 'guest', 'inactive'),
-       (2, 'admin', 'admin@example.com', 'admin', 'super_admin', 'active');
+VALUES (1, 'guest', 'guest', '$2y$10$myhly1gBv4T8rr8XOd1gz./tID2HFe0jCjykKrsLtb/2vnHJ9kUk2
+', 'guest', 'inactive'),
+       (2, 'admin', 'admin@example.com', '$2y$10$6EmuDfWgGeabUg6HgcGGOezggdC3NMj/zxGjKy5tVsSkPz0GuJxMy', 'super_admin', 'active');
 
 CREATE TABLE user_meta
 (

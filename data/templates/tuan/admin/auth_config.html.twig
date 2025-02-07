@@ -19,10 +19,29 @@
             </blockquote>
             <div class="layui-card layui-panel">
                 <div class="layui-card-header">
-                    <p>如果您要使用收费插件，请先配置您的授权信息，如果您还没有授权，请 <a href="//authpro.cutetuan.cn/">前往购买（选择自助服务）</a></p>
+                    <p>如果您要使用收费插件，请先配置您的授权信息，如果您还没有授权，请 ==》点击这里<a href="//authpro.cutetuan.cn/">前往购买（选择自助服务）《==</a></p>
                 </div>
                 <div class="layui-card-body">
+                    <form class="layui-form" action="" method="post">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">卡密</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="card_key" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
 
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button type="submit" class="layui-btn" lay-submit lay-filter="auth">立即提交</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                    {% if global.auth_card_key is defined and global.auth_card_key %}
+                        <br>
+                        <p>您的授权信息如下：</p>
+                        {{ global.auth_card_key }}
+                    {% endif %}
                 </div>
             </div>
             <br><br>
@@ -34,7 +53,15 @@
 </div>
 
 <script>
+    layui.use(['form'], function(){
+        var form = layui.form;
 
+        // 提交事件
+        // form.on('submit(auth)', function(data){
+        //     var field = data.field; // 获取表单字段值
+        //
+        // });
+    });
 </script>
 </body>
 </html>

@@ -29,5 +29,5 @@
 
 include 'check.php';
 
-add_menu('admin_sidebar', '设置', 'javascript:');
+
 

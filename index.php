@@ -36,7 +36,10 @@ define('ROOT', __DIR__);
 // 定义插件目录常量
 define('TUANICP_PLUGIN_DIR', DATA_ROOT . '/plugins');
 define('TUANICP_TEMPLATE_DIR', DATA_ROOT . '/templates');
-
+// 定义cookie域
+define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST']);
+// 定义一天中的秒数
+define('DAY_IN_SECONDS', 86400);
 // 检查是否刚更新完并且是否在10分钟内
 function isRecentlyUpdated()
 {

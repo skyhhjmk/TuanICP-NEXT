@@ -18,12 +18,12 @@ function initPlusPack()
     } else {
         return;
     }
-    add_submenu('admin_sidebar', 'javascript:', '站点设置', get_Url('admin/settings'));
-    add_submenu('admin_sidebar', 'javascript:', '用户管理', get_Url('admin/users'));
-    add_menu('admin_sidebar', '主题',get_Url('admin/settings'));
-    add_menu('admin_sidebar', '备案管理','javascript:');
-    add_submenu('admin_sidebar', 'javascript:', '全部备案', get_Url('admin/all_icp'));
-    add_submenu('admin_sidebar', 'javascript:', '审核管理', get_Url('admin/audit'));
+    add_submenu('admin_sidebar', '#settings', '站点设置', get_Url('admin/settings'));
+    add_submenu('admin_sidebar', '#settings', '用户管理', get_Url('admin/users'));
+//    add_menu('admin_sidebar', '主题',get_Url('admin/settings'));
+    add_menu('admin_sidebar', '备案管理','#icp');
+    add_submenu('admin_sidebar', '#icp', '全部备案', get_Url('admin/all_icp'));
+    add_submenu('admin_sidebar', '#icp', '审核管理', get_Url('admin/audit'));
 
 
 }

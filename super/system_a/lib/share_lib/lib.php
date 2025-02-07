@@ -35,23 +35,24 @@
  * @return bool 如果ICP备案号存在则返回true，否则返回false
  * @throws JsonException
  */
-function check_icp_exists($icp_number) {
+function check_icp_exists($icp_number)
+{
     $pdo = initDatabase();
 
     // 准备SQL语句
     $sql = "SELECT site_icp_number FROM sites WHERE site_icp_number = :icp_number";
 
     // 准备预处理语句
-    $stmt =$pdo->prepare($sql);
+    $stmt = $pdo->prepare($sql);
 
     // 绑定参数
-    $stmt->bindParam(':icp_number',$icp_number, PDO::PARAM_STR);
+    $stmt->bindParam(':icp_number', $icp_number, PDO::PARAM_STR);
 
     // 执行预处理语句
     $stmt->execute();
 
     // 检索结果
-    $result =$stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // 检查结果是否存在
     return $result !== false;
@@ -65,7 +66,7 @@ function check_icp_exists($icp_number) {
  */
 function validate_icp_number($icp_number): bool
 {
-    if (is_plugin_active_by_name('经典ICP规则')){
+    if (is_plugin_active_by_name('经典ICP规则')) {
         // 检查 ICP 号码是否为8位且仅包含数字
         if (strlen($icp_number) === 8 && ctype_digit($icp_number)) {
             // 检查 ICP 号码是否存在于数据库中
@@ -74,7 +75,7 @@ function validate_icp_number($icp_number): bool
             }
         }
         return false;
-    }else{
+    } else {
         // TODO: 实现其他验证逻辑
     }
     return false;
@@ -90,37 +91,96 @@ function icp_auth()
 
     // 如果缓存池不为 null，尝试从缓存中获取数据
     if ($cachePool !== null) {
-        $item = $cachePool->getItem($cacheKey);
+        $item =$cachePool->getItem($cacheKey);
         if ($item->isHit()) {
             // 缓存命中，直接返回缓存中的数据
             return $item->get();
         }
     }
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "https://qifu-api.baidubce.com/ip/local/geo/v1/district");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // 将结果返回，而不是输出
+    // 关闭ssl验证
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $response = curl_exec($ch);
+    if (curl_errno($ch)) {
+        echo 'cURL error: ' . curl_error($ch);
+    } else {
+        // 关闭cURL会话
+        curl_close($ch);
 
+        // 解码JSON响应
+        $decodedResponse = json_decode($response, true);
+    }
+    // 定义变量
+    $device_code = $decodedResponse['ip'];
+    $device_info_st = 'Server:' . str_replace(["\n", "\r\n"], "\r\n",$_SERVER['SERVER_SOFTWARE']) . '-PHP:' . str_replace(["\n", "\r\n"], "\r\n", phpversion());
+    $device_info = md5($device_info_st);
+    $timestamp = time();
+    // 构建签名
+    $sign_data = [
+        'device_code' => $device_code ?: "",
+        'device_info' => $device_info ?: "",
+        'timestamp' => $timestamp ?: "",
+    ];
+    ksort($sign_data);
+    $sign_string = http_build_query($sign_data);
+    $sign_string .= '&gen_key=589776G2b9c6263d';
+    $sign = md5($sign_string);
     $curl = curl_init();
 
+    // 构建POST数据
+    $postData = [
+        "data" => [
+            "device_info" => $device_info,
+            "device_code" => $device_code,
+            "timestamp" => $timestamp
+        ],
+        "skey" => SKEY,
+        "vkey" => VKEY,
+        "sign" => $sign,
+    ];
+
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'authapi.cutetuan.cn/myauth/web/queryUserInfo?user=' . get_Config('auth_user') . '&skey=' . SOFTWARE_SKEY,
+        CURLOPT_URL => 'authapi.cutetuan.cn/myauth/soft/init',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
         CURLOPT_TIMEOUT => 0,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => json_encode($postData),
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+        ),
     ));
 
     $response = curl_exec($curl);
 
     curl_close($curl);
 
+    global $auth_data;
+
     $auth_data = json_decode($response, true);
-    if ($auth_data['code'] === '200') {
+    if ($auth_data['code'] === 200) {
+        // 函数返回 true，将结果缓存
+        if ($cachePool !== null) {
+            $item =$cachePool->getItem($cacheKey);
+            $item->set($auth_data);
+            $item->expiresAfter(10800); // 10800秒等于3小时
+            $cachePool->save($item);
+        }
         return true;
     } else {
+        // 函数返回 false，删除缓存项
+        if ($cachePool !== null) {
+            $cachePool->deleteItem($cacheKey);
+        }
         return false;
     }
 }
+
 
 function icp_auth_free()
 {

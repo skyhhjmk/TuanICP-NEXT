@@ -27,12 +27,29 @@
  * 最终解释权归风屿团所有开发成员所有。
  */
 
-
-if (!defined('APP_ROOT')) {
-    exit('Direct access is not allowed.');
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $input_username = $_POST['username'];
+    $input_password = $_POST['password'];
+    $remember = isset($_POST['remember']);
+    if (login($input_username, $input_password, $remember)) {
+        $data = [
+            'code' => 0,
+            'message' => '登录成功',
+            'status' => 'success'
+        ];
+        echo json_encode($data);
+        exit;
+    } else {
+        $data = [
+            'code' => 1,
+            'message' => '登录失败',
+            'status' => 'failed'
+        ];
+        echo json_encode($data);
+        exit;
+    }
 }
 
-$user_role = get_current_user_role();
-if (!$user_role){
-    header('Location: '. get_Url('admin/login'));
-}
+$twig = initTwig();
+
+echo $twig->render('@admin/login.html.twig', get_Page_vars());

@@ -43,6 +43,7 @@ if (!defined('APP_ROOT')) {
 function set_Config(string $key, mixed $value): bool
 {
     $dbc = initDatabase();
+    // 当key存在时更新，不存在时插入
     $query = "INSERT INTO config (k, v) VALUES (:key, :value) ON DUPLICATE KEY UPDATE v = :value";
     $stmt = $dbc->prepare($query);
     $stmt->bindParam(':key', $key);
