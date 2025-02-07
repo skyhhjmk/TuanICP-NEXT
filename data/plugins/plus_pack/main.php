@@ -8,6 +8,9 @@
 */
 function initPlusPack()
 {
+    if (!icp_auth()){
+        exit('您已经安装了Plus扩展包，但是授权失败！Plus扩展包是一个收费功能，请购买授权并且配置授权用户信息，否则请删除Plus扩展包以正常使用。');
+    }
     define('PLUS_PACK_DIR', __DIR__);
 
     if (file_exists(TUANICP_PLUGIN_DIR . '/app_store/inc/wind_share_lib/func.php')) {
@@ -33,22 +36,21 @@ function register_plus_pack_routes($routes)
     // 添加新的路由条目
     $new_routes = [
         'join' => PLUS_PACK_DIR . '/pages/join.php',
-        'admin' => [
-            'users' => PLUS_PACK_DIR . 'pages/admin/users.php',
-            'stats' => PLUS_PACK_DIR . 'pages/admin/stats.php',
-            'settings' => PLUS_PACK_DIR . 'pages/admin/settings.php',
-            'all_icp' => PLUS_PACK_DIR . 'pages/admin/all_icp.php',
-            'audit' => PLUS_PACK_DIR . 'pages/admin/audit.php',
-            'audit_log' => PLUS_PACK_DIR . 'pages/admin/audit_log.php',
-            'auto_audit' => PLUS_PACK_DIR . 'pages/admin/auto_audit.php',
-            'plugins' => PLUS_PACK_DIR . 'pages/admin/plugins.php',
-            'themes' => PLUS_PACK_DIR . 'pages/admin/themes.php',
-            'logs' => PLUS_PACK_DIR . 'pages/admin/logs.php',
-        ],
     ];
 
-    // 合并新的路由到原始路由数组中
-    return array_replace_recursive($routes, $new_routes);
+    $routes = array_merge($routes, $new_routes);
+
+    $routes['admin']['users'] = PLUS_PACK_DIR . '/pages/admin/users.php';
+    $routes['admin']['stats'] = PLUS_PACK_DIR . '/pages/admin/stats.php';
+    $routes['admin']['settings'] = PLUS_PACK_DIR . '/pages/admin/settings.php';
+    $routes['admin']['all_icp'] = PLUS_PACK_DIR . '/pages/admin/all_icp.php';
+    $routes['admin']['audit'] = PLUS_PACK_DIR. '/pages/admin/audit.php';
+    $routes['admin']['audit_log'] = PLUS_PACK_DIR. '/pages/admin/audit_log.php';
+    $routes['admin']['auto_audit'] = PLUS_PACK_DIR. '/pages/admin/auto_audit.php';
+    $routes['admin']['themes'] = PLUS_PACK_DIR. '/pages/admin/themes.php';
+    $routes['admin']['logs'] = PLUS_PACK_DIR. '/pages/admin/logs.php';
+
+    return $routes;
 }
 
 // 使用 'page_router' 过滤器钩子添加自定义路由

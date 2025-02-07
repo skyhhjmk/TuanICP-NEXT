@@ -50,7 +50,7 @@ switch ($icp_record['status']) {
         ];
         break;
     case 'approved':
-        $status_msg = "该备案信息已经通过审核，请正确悬挂信息。";
+        $status_msg = "审核通过。";
         $icp_common_icp_record = $icp_record;
         $icp_common_icp_record['owner'] = $site_config['owner'];
         break;
@@ -93,6 +93,7 @@ function id_add_page_vars($page_vars)
             'site_desc' => $icp_common_icp_record['site_desc'],
             'site_avatar_url' => $icp_common_icp_record['site_avatar_url'],
             'site_icp_number' => $icp_common_icp_record['site_icp_number'],
+            'owner' => $icp_common_icp_record['owner'],
             'created_at' => $icp_common_icp_record['created_at'],
             'site_status' => $icp_common_icp_record['status_msg'],
         ],

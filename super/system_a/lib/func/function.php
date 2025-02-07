@@ -31,82 +31,7 @@ if (!defined('APP_ROOT')) {
     exit('Direct access is not allowed.');
 }
 
-/**
- * 获取配置项的值，如果配置项不存在，则返回默认值
- * @param string $key 设置项
- * @param null $default 默认值
- * @param bool $init
- * @param bool $useCache
- * @return mixed|null
- * @throws JsonException
- */
-function get_Config(string $key, $default = null, bool $init = false, bool $useCache = true): mixed
-{
-    if ($useCache) {
-        // 初始化缓存池，如果缓存被禁用，则 $cachePool 为 null
-        $cachePool = initCache();
 
-        // 定义缓存项的键
-        $cacheKey = 'config_' . $key;
-
-        // 如果缓存池不为 null，尝试从缓存中获取数据
-        if ($cachePool !== null) {
-            $item = $cachePool->getItem($cacheKey);
-            if ($item->isHit()) {
-                // 缓存命中，直接返回缓存中的数据
-                return $item->get();
-            }
-        }
-
-        // 初始化数据库连接
-        $dbc = initDatabase();
-        $query = "SELECT v FROM config WHERE k = :key";
-        $stmt = $dbc->prepare($query);
-        $stmt->bindParam(':key', $key);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($result) {
-            // 如果查询结果存在，保存到缓存中（如果缓存池不为 null）
-            if ($cachePool !== null) {
-                $item->set($result['v']);
-                $cachePool->save($item);
-            }
-            return $result['v'];
-        } else {
-            if ($init) {
-                // 如果需要初始化配置，则调用 set_Config 函数
-                set_Config($key, $default);
-                // 保存默认值到缓存中（如果缓存池不为 null）
-                if ($cachePool !== null) {
-                    $item->set($default);
-                    $cachePool->save($item);
-                }
-            }
-            return $default;
-        }
-    } else {
-        // 初始化数据库连接
-        $dbc = initDatabase();
-        $query = "SELECT v FROM config WHERE k = :key";
-        $stmt = $dbc->prepare($query);
-        $stmt->bindParam(':key', $key);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($result) {
-            return $result['v'];
-        } else {
-            if ($init) {
-                // 如果需要初始化配置，则调用 set_Config 函数
-                set_Config($key, $default);
-            }
-            return $default;
-        }
-    }
-
-
-}
 
 /**
  * 设置配置项的值
@@ -223,6 +148,7 @@ function get_Page_vars(array $additionalVars = []): ?array
             'audit_duration' => get_Config('audit_duration', '3天', true),
             'feedback_link' => get_Config('feedback_link', 'https://qm.qq.com/q/kClRRuBmOQ', true),
             'background_image' => get_Config('background_image', 'https://cdn.koxiuqiu.cn/ccss/ecyrw/ecy%20(68).png', true),
+            'update_log_page' => 'https://authpro.cutetuan.cn/#/Soft/getUpdateLog?skey=b696c5ed-7c0a-43c2-b223-9cdf6053f7ff',
         ],
         'template' => [
             'root' => '/data/templates/' . get_Template_name(),
