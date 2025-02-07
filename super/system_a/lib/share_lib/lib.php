@@ -81,6 +81,31 @@ function validate_icp_number($icp_number): bool
     return false;
 }
 
+function verifySign($data,$receivedSign, $genKey) {
+    // 对数据进行按键名排序
+    ksort($data);
+    // 生成签名字符串
+    $sign_string = http_build_query($data);
+    $sign_string .= '&gen_key=' .$genKey;
+
+    // 计算签名字符串的MD5值
+    $calculatedSign = md5($sign_string);
+
+    // 比较计算出的签名与接收到的签名
+    return $calculatedSign ===$receivedSign;
+}
+
+function getSign($data, $genKey) {
+    // 对数据进行按键名排序
+    ksort($data);
+    // 生成签名字符串
+    $sign_string = http_build_query($data);
+    $sign_string.= '&gen_key='.$genKey;
+    // 计算签名字符串的MD5值
+    $sign = md5($sign_string);
+    return $sign;
+}
+
 function icp_auth()
 {
     // 初始化缓存池，如果缓存被禁用，则 $cachePool 为 null
@@ -117,32 +142,69 @@ function icp_auth()
     $device_info_st = 'Server:' . str_replace(["\n", "\r\n"], "\r\n",$_SERVER['SERVER_SOFTWARE']) . '-PHP:' . str_replace(["\n", "\r\n"], "\r\n", phpversion());
     $device_info = md5($device_info_st);
     $timestamp = time();
-    // 构建签名
-    $sign_data = [
-        'device_code' => $device_code ?: "",
-        'device_info' => $device_info ?: "",
-        'timestamp' => $timestamp ?: "",
-    ];
-    ksort($sign_data);
-    $sign_string = http_build_query($sign_data);
-    $sign_string .= '&gen_key=589776G2b9c6263d';
-    $sign = md5($sign_string);
     $curl = curl_init();
-
+    $data = [
+    "device_info" => $device_info,
+    "device_code" => $device_code,
+    "timestamp" => $timestamp
+];
     // 构建POST数据
     $postData = [
-        "data" => [
-            "device_info" => $device_info,
-            "device_code" => $device_code,
-            "timestamp" => $timestamp
-        ],
+        "data" => $data,
         "skey" => SKEY,
         "vkey" => VKEY,
-        "sign" => $sign,
+        "sign" => getSign($data,'589776G2b9c6263d'),
+    ];
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'authapi.cutetuan.cn/myauth/soft/init',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => json_encode($postData),
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+        ),
+    ));
+    $response = curl_exec($curl);
+    curl_close($curl);
+
+    global $init_auth_data;
+
+    $init_auth_data = json_decode($response, true);
+    $receivedSign = $init_auth_data['sign'];
+    if (!verifySign($init_auth_data['result'], $receivedSign,'589776G2b9c6263d')){
+        return false;
+    }
+
+    // 定义变量
+    $device_code = $decodedResponse['ip'];
+    $device_info_st = 'Server:' . str_replace(["\n", "\r\n"], "\r\n",$_SERVER['SERVER_SOFTWARE']) . '-PHP:' . str_replace(["\n", "\r\n"], "\r\n", phpversion());
+    $device_info = md5($device_info_st);
+    $timestamp = time();
+    $curl = curl_init();
+
+    $data = [
+    'user' => get_Config('auth_user',null ,false,false) ?? '0',
+    'pass' => get_Config('auth_passwd',null ,false,false) ?? '0',
+//    'ckey' => get_Config('auth_card_key',null ,false,false) ?? '0',
+    "device_info" => $device_info,
+    "device_code" => $device_code,
+    "timestamp" => $timestamp
+];
+    // 构建POST数据
+    $postData = [
+        'data' => $data,
+        "skey" => SKEY,
+        "vkey" => VKEY,
+        "sign" => getSign($data,'589776G2b9c6263d'),
     ];
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'authapi.cutetuan.cn/myauth/soft/init',
+        CURLOPT_URL => 'authapi.cutetuan.cn/myauth/soft/login',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -160,25 +222,32 @@ function icp_auth()
 
     curl_close($curl);
 
-    global $auth_data;
+    global $login_auth_data;
 
-    $auth_data = json_decode($response, true);
-    if ($auth_data['code'] === 200) {
-        // 函数返回 true，将结果缓存
+    $login_auth_data = json_decode($response, true);
+    if (!is_array($login_auth_data) || empty($login_auth_data['result'])){
+        return false;
+    }
+    $receivedSign = $login_auth_data['sign'];
+    if (!verifySign($login_auth_data['result'], $receivedSign,'589776G2b9c6263d')){
+        return false;
+    }
+    // 缓存登陆结果
+    $cacheKey = 'auth_login_token';
+
+    if ($login_auth_data['code'] === 200) {
         if ($cachePool !== null) {
             $item =$cachePool->getItem($cacheKey);
-            $item->set($auth_data);
+            $item->set($login_auth_data['result']['token']);
             $item->expiresAfter(10800); // 10800秒等于3小时
             $cachePool->save($item);
         }
-        return true;
     } else {
-        // 函数返回 false，删除缓存项
         if ($cachePool !== null) {
             $cachePool->deleteItem($cacheKey);
         }
-        return false;
     }
+    return true;
 }
 
 

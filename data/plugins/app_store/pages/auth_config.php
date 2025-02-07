@@ -38,9 +38,14 @@ if (!$user_role){
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $auth_user = $_POST['auth_user'];
+    $auth_passwd = $_POST['auth_passwd'];
     $auth_card_key = $_POST['auth_card_key'];
 
     set_Config('auth_card_key', $auth_card_key);
+    set_Config('auth_user', $auth_user);
+    set_Config('auth_passwd', $auth_passwd);
+
     header('Location: '. get_Url('admin/auth_config'));
 }
 

@@ -24,7 +24,19 @@
                 <div class="layui-card-body">
                     <form class="layui-form" action="" method="post">
                         <div class="layui-form-item">
-                            <label class="layui-form-label">卡密</label>
+                            <label class="layui-form-label">授权用户名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="auth_user" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">授权密码</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="auth_passwd" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">授权卡密</label>
                             <div class="layui-input-block">
                                 <input type="text" name="card_key" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
                             </div>
