@@ -27,6 +27,9 @@
  * 最终解释权归风屿团所有开发成员所有。
  */
 
+if (!defined('APP_ROOT')) {
+    exit('Direct access is not allowed.');
+}
 
 function register($username,$email, $password) {
     $pdo = initDatabase();

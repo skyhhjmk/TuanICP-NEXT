@@ -28,6 +28,9 @@
  */
 
 
+if (!defined('APP_ROOT')) {
+    exit('Direct access is not allowed.');
+}
 /**
  * 检查指定的ICP备案号是否存在于数据库中
  *
@@ -81,41 +84,12 @@ function validate_icp_number($icp_number): bool
     return false;
 }
 
-function verifySign($data,$receivedSign, $genKey) {
-    // 对数据进行按键名排序
-    ksort($data);
-    // 生成签名字符串
-    $sign_string = http_build_query($data);
-    $sign_string .= '&gen_key=' .$genKey;
-
-    // 计算签名字符串的MD5值
-    $calculatedSign = md5($sign_string);
-
-    // 比较计算出的签名与接收到的签名
-    return $calculatedSign ===$receivedSign;
-}
-
-function getSign($data, $genKey) {
-    // 对数据进行按键名排序
-    ksort($data);
-    // 生成签名字符串
-    $sign_string = http_build_query($data);
-    $sign_string.= '&gen_key='.$genKey;
-    // 计算签名字符串的MD5值
-    $sign = md5($sign_string);
-    return $sign;
-}
 
 function icp_auth()
 {
-    return true;
-}
-
-
-function icp_auth_free()
-{
 
 }
+
 
 /**
  * 获取配置项的值，如果配置项不存在，则返回默认值

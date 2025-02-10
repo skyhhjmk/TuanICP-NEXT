@@ -6,6 +6,9 @@
  * Author:             风屿Wind
  * Dependencies:       应用商店
 */
+if (!defined('APP_ROOT')) {
+    exit('Direct access is not allowed.');
+}
 function initPlusPack()
 {
     if (!icp_auth()){

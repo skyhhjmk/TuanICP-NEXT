@@ -63,6 +63,24 @@
       <path value="$PROJECT_DIR$/super/system_a/vendor/vlucas/phpdotenv" />
       <path value="$PROJECT_DIR$/super/system_a/vendor/symfony/deprecation-contracts" />
       <path value="$PROJECT_DIR$/super/system_a/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/cakephp/utility" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/cakephp/chronos" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/cakephp/core" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/cakephp/database" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/cakephp/datasource" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/psr/simple-cache" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/psr/clock" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/symfony/config" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/symfony/filesystem" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/robmorgan/phinx" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/super/system_a/vendor/league/container" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1">

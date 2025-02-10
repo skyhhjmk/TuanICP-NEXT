@@ -40,7 +40,8 @@ $extensions_check = check_extensions([
     'curl',
     'openssl',
     'zip',
-    'json'
+    'json',
+    'sockets'
 ]);
 $directory_check = check_directory_permissions('..');
 

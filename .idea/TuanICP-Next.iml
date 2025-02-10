@@ -3,7 +3,6 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/super/system_a/vendor/tedivm/stash/tests/Stash" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/graham-campbell/result-type" />
@@ -26,6 +25,24 @@
       <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/tedivm/stash" />
       <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/twig/twig" />
       <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/vlucas/phpdotenv" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/cakephp/chronos" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/cakephp/core" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/cakephp/database" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/cakephp/datasource" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/cakephp/utility" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/league/container" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/psr/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/psr/container" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/psr/log" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/psr/simple-cache" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/robmorgan/phinx" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/symfony/config" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/symfony/console" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/symfony/filesystem" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/symfony/polyfill-intl-grapheme" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/symfony/polyfill-intl-normalizer" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/symfony/service-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/symfony/string" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
