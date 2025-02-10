@@ -45,3 +45,4 @@ function initDatabase()
 //    }
     return null;
 }
+
