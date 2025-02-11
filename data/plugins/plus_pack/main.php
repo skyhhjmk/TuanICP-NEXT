@@ -1,7 +1,7 @@
 <?php
 /*
  * Name:               Plus扩展包
- * Description:        此插件将为TuanICP提供额外的高级功能，绝对物超所值
+ * Description:        【请先设置授权信息】此插件将为TuanICP提供额外的高级功能，绝对物超所值
  * Version:            1.0
  * Author:             风屿Wind
  * Dependencies:       应用商店
