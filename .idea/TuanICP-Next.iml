@@ -11,7 +11,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-mbstring" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php80" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/vlucas/phpdotenv" />
-      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
       <excludeFolder url="file://$MODULE_DIR$/cache" />
       <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/graham-campbell/result-type" />
@@ -21,10 +20,11 @@
       <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/symfony/polyfill-ctype" />
       <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/symfony/polyfill-mbstring" />
       <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/symfony/polyfill-php80" />
-      <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/symfony/polyfill-php81" />
       <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/tedivm/stash" />
       <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/twig/twig" />
       <excludeFolder url="file://$MODULE_DIR$/super/system_a/vendor/vlucas/phpdotenv" />
+      <excludeFolder url="file://$MODULE_DIR$/data/plugins/mailer/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/data/plugins/mailer/vendor/phpmailer/phpmailer" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

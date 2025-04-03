@@ -1,31 +1,5 @@
 <?php
-/*
- * Copyright (c) 2025.
- * 本项目由【风屿团】项目团队持有，一旦您存在使用、修改、参与开发、分发本软件的开源副本、转发此软件的信息等与本软件有关的行为，则默认您已经阅读并且同意此协议。
- *
- * 通常情况下，您具有以下权力：
- * 修改本软件的开源部分并且保持开源，分发；
- * 在您的项目中使用本软件并声明；
- * 开发并出售可在本系统中正常工作的插件。
- *
- * 通常情况下，您不得实施以下可能对我们造成损失的行为：
- * 二次分发、倒卖、共享授权账号或源码；
- * 破解或尝试反编译等来绕过软件包括但不限于付费插件的任何收费或闭源模块；
- * 在我们开发的系统中编写包括但不限于恶意代码、后门、木马等；
- * 充当开发者售卖软件副本；
- * 私自建设授权系统接口响应站（俗称自建授权站）。
- *
- * 任何情况下，您必须承认：
- * 无条件认同“台湾省是中国领土不可分割的一部分”这一立场；
- * 若产生任何纠纷，本项目开发者及开发团队不承担任何责任。
- *
- * 若违反以上协议，我们有权向您索取不低于3000元人民币的赔偿。
- *
- * 我们的声明：
- * 我们使用了众多开源库，在此鸣谢背后的开发者/团队。
- * 若使用本软件且在未经许可的情况下进行商业活动，我们有权追回您进行商业活动的所得资产（仅使用本软件产生的资产）并要求您支付相应的商业授权和赔偿费用或要求您停止商业行为。
- * 最终解释权归风屿团所有开发成员所有。
- */
+
 
 
 if (!defined('APP_ROOT')) {
@@ -84,20 +58,20 @@ function validate_icp_number($icp_number): bool
     return false;
 }
 
-function verifySign($data,$receivedSign, $genKey)
+function verifySign($data, $receivedSign, $genKey)
 {
     // 对数据进行按键名排序
     ksort($data);
 
     // 生成签名字符串前，处理值为null的情况，将其转换为空字符串
-    array_walk_recursive($data, function(&$value) {
-        if ($value === null ||$value === '') {
+    array_walk_recursive($data, function (&$value) {
+        if ($value === null || $value === '') {
             $value = '';
         }
     });
 
     // 对数组进行JSON编码处理
-    array_walk_recursive($data, function(&$value) {
+    array_walk_recursive($data, function (&$value) {
         if (is_array($value)) {
             $value = json_encode($value, JSON_UNESCAPED_UNICODE);
         }
@@ -105,13 +79,13 @@ function verifySign($data,$receivedSign, $genKey)
 
     // 生成签名字符串
     $sign_string = http_build_query($data);
-    $sign_string .= '&gen_key=' .$genKey;
+    $sign_string .= '&gen_key=' . $genKey;
 
     // 计算签名字符串的MD5值
     $calculatedSign = md5($sign_string);
 
     // 比较计算出的签名与接收到的签名
-    return $calculatedSign ===$receivedSign;
+    return $calculatedSign === $receivedSign;
 }
 
 
@@ -134,95 +108,87 @@ function icp_auth()
      * 发心跳验证签名过不去，所以暂时禁用掉心跳的验证逻辑
      * 在有缓存、无缓存两种状态需要都注释掉
      */
-    // 初始化缓存池，如果缓存被禁用，则 $cachePool 为 null
-    $cachePool = initCache();
 
+    // 缓存命中，发心跳包
+    $auth_token = get_Config('auth_token');
+    if (!empty($auth_token)) {
 
-    $cacheKey = 'auth_login_token';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://qifu-api.baidubce.com/ip/local/geo/v1/district");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // 将结果返回，而不是输出
+        // 关闭ssl验证
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo 'cURL error: ' . curl_error($ch);
+        } else {
+            // 关闭cURL会话
+            curl_close($ch);
 
-    // 如果缓存池不为 null，尝试从缓存中获取数据
-    if ($cachePool !== null) {
-        $item = $cachePool->getItem($cacheKey);
-        if ($item->isHit()) {
-            // 缓存命中，发心跳包
-            $auth_token = $item->get();
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, "https://qifu-api.baidubce.com/ip/local/geo/v1/district");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // 将结果返回，而不是输出
-            // 关闭ssl验证
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            $response = curl_exec($ch);
-            if (curl_errno($ch)) {
-                echo 'cURL error: ' . curl_error($ch);
-            } else {
-                // 关闭cURL会话
-                curl_close($ch);
+            // 解码JSON响应
+            $decodedResponse = json_decode($response, true);
+        }
+        // 定义变量
+        $device_code = $decodedResponse['ip'];
+        $device_info_st = 'Server:' . str_replace(["\n", "\r\n"], "\r\n", $_SERVER['SERVER_SOFTWARE']) . '-PHP:' . str_replace(["\n", "\r\n"], "\r\n", phpversion());
+        $device_info = md5($device_info_st);
+        $timestamp = time();
+        $curl = curl_init();
 
-                // 解码JSON响应
-                $decodedResponse = json_decode($response, true);
-            }
-            // 定义变量
-            $device_code = $decodedResponse['ip'];
-            $device_info_st = 'Server:' . str_replace(["\n", "\r\n"], "\r\n", $_SERVER['SERVER_SOFTWARE']) . '-PHP:' . str_replace(["\n", "\r\n"], "\r\n", phpversion());
-            $device_info = md5($device_info_st);
-            $timestamp = time();
-            $curl = curl_init();
+        $data = [
+            "device_info" => $device_info,
+            "device_code" => $device_code,
+            "token" => $auth_token,
+            "timestamp" => $timestamp
+        ];
+        // 构建POST数据
+        $postData = [
+            "data" => $data,
+            "skey" => SKEY,
+            "vkey" => VKEY,
+            "sign" => getSign($data, '589776G2b9c6263d'),
+        ];
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://authapi.example.com/myauth/soft/heart',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode($postData),
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json'
+            ),
+        ));
+        $response = curl_exec($curl);
 
-            $data = [
-                "device_info" => $device_info,
-                "device_code" => $device_code,
-                "token" => $auth_token,
-                "timestamp" => $timestamp
-            ];
-            // 构建POST数据
-            $postData = [
-                "data" => $data,
-                "skey" => SKEY,
-                "vkey" => VKEY,
-                "sign" => getSign($data, '589776G2b9c6263d'),
-            ];
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://authapi.cutetuan.cn/myauth/soft/heart',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => json_encode($postData),
-                CURLOPT_HTTPHEADER => array(
-                    'Content-Type: application/json'
-                ),
-            ));
-            $response = curl_exec($curl);
+        if ($response === false) {
+            $error = curl_error($curl);
+            // 这里打印错误信息，或者你可以将其记录到日志中
+            echo "cURL Error: " . $error;
+        }
 
-            if ($response === false) {
-                $error = curl_error($curl);
-                // 这里打印错误信息，或者你可以将其记录到日志中
-                echo "cURL Error: " . $error;
-            }
+        curl_close($curl);
 
-            curl_close($curl);
+        global $init_auth_data;
 
-            global $init_auth_data;
-
-            $init_auth_data = json_decode($response, true);
-            if (empty($login_token_data['result'])){
-                $cachePool->deleteItem($cacheKey);
-                var_dump($response);
-                echo "<br/><h2>签名验证失败，这可能是缓存过期，正在重新获取令牌...</h2>";
-                echo '<script type="text/javascript">window.location.reload();</script>';
-                return false;
-            }
+        $init_auth_data = json_decode($response, true);
+        if (empty($login_token_data['result'])) {
+//            var_dump($response);
+//            echo "<br/><h2>签名验证失败，这可能是缓存过期，正在重新获取令牌...</h2>";
+//            echo '<script type="text/javascript">window.location.reload();</script>';
+            goto req;
+        }
 //            $receivedSign = $login_token_data['sign'];
 //            if (!verifySign($init_auth_data['result'], $receivedSign, '589776G2b9c6263d')) {
 //                return false;
 //            }
-            return true;
-        }
+        return true;
     }
+    req:
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, "https://qifu-api.baidubce.com/ip/local/geo/v1/district");
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // 将结果返回，而不是输出
@@ -258,7 +224,7 @@ function icp_auth()
         "sign" => getSign($data, '589776G2b9c6263d'),
     ];
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://authapi.cutetuan.cn/myauth/soft/init',
+        CURLOPT_URL => 'https://authapi.example.com/myauth/soft/init',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_ENCODING => '',
@@ -285,7 +251,7 @@ function icp_auth()
     global $init_auth_data;
 
     $init_auth_data = json_decode($response, true);
-    if (empty($init_auth_data['result'])){
+    if (empty($init_auth_data['result'])) {
         var_dump($response);
         return false;
     }
@@ -320,7 +286,7 @@ function icp_auth()
     ];
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://authapi.cutetuan.cn/myauth/soft/login',
+        CURLOPT_URL => 'https://authapi.example.com/myauth/soft/login',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_ENCODING => '',
@@ -356,29 +322,10 @@ function icp_auth()
 //    if (!verifySign($login_auth_data['result'], $receivedSign, '589776G2b9c6263d')) {
 //        return false;
 //    }
-    // 缓存登陆结果
-    $cacheKey = 'auth_login_token';
-
-    if ($login_auth_data['code'] === 200) {
-        if ($cachePool !== null) {
-            $item = $cachePool->getItem($cacheKey);
-            $item->set($login_auth_data['result']['token']);
-            $item->expiresAfter(10800); // 10800秒等于3小时
-            $cachePool->save($item);
-        }
-    } else {
-        if ($cachePool !== null) {
-            $cachePool->deleteItem($cacheKey);
-        }
-    }
+    set_Config('auth_token', $login_auth_data['result']['token']);
     return true;
 }
 
-
-function icp_auth_free()
-{
-
-}
 
 
 /**
