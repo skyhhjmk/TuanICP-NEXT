@@ -17,3 +17,11 @@ Firstly, this project itself was developed for paid use. To this end, there is a
 --- 
 
 Secondly, this project is not perfect, and in fact, some features are still under development. Due to certain reasons, the maintenance may be very infrequent or even come to a complete halt. For this reason, I have decided to open-source this project. Additionally, the AB update framework used in this project has already been updated. This framework, which I developed independently, was inspired by the A/B update model of the Android system. Although the framework is not yet perfect, I will also open-source the new version of the framework soon.
+
+---
+
+And... This:
+
+![0e8fd55d1b5f430a401711d592ad7e3](https://github.com/user-attachments/assets/53b671d2-1a0a-4d95-b168-173cbd6637aa)
+
+The issue I raised is: [https://github.com/yuntuanzi/TuanICP/issues/3](https://github.com/yuntuanzi/TuanICP/issues/3)
